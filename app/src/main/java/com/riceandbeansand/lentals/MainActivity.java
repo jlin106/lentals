@@ -21,39 +21,45 @@ public class MainActivity extends AppCompatActivity {
     CallbackManager callbackManager;
     private static final String EMAIL = "email";
 
+    protected void facebookSDKInitialize() {
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        callbackManager = CallbackManager.Factory.create();
+        facebookSDKInitialize();
 
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList(EMAIL));
-        // If you are using in a fragment, call loginButton.setFragment(this);
 
-        // Callback registration
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                // App code
-            }
-
-            @Override
-            public void onCancel() {
-                // App code
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-            }
-        });
-
+        getLoginDetails(loginButton);
 
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
 
+    }
+
+    protected void getLoginDetails(LoginButton loginButton){
+        // Callback registration
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult login_result) {
+                Intent intent = new Intent(MainActivity.this, MainListings.class);
+                startActivity(intent);
+            }
+            @Override
+            public void onCancel() {
+                // code for cancellation
+            }
+            @Override
+            public void onError(FacebookException exception) {
+                //  code to handle error
+            }
+        });
     }
 
     @Override
