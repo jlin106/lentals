@@ -8,7 +8,8 @@ Jen - 11/3/19
   
   MainActivity currently just has the one "Continue with Facebook" button that will lead you to 
   sign into Facebook. After successful signin, it launches MainListings activity.
-  NEED TO DO: If login was unsuccessful.
+  NEED TO DO: If login was unsuccessful, what happens? Also Navigation drawer should include user profile 
+  info in the header.
 
 Jen - 11/4/19
   Worked on basic navigation drawer and navigation functionality.
@@ -20,3 +21,13 @@ Jen - 11/4/19
   content layouts. The navigation functionality works - can access MainListings and MyItems from the drawer. 
   Notes: Had to include a dependency to gradle for the Navigation View, had to update the styles.xml in order to use toolbar
   NEED TO DO: Implement the actual activities functionality.
+  
+Jen - 11/5/19
+  Worked on floating add button functionality.
+  Created Activities: AddItem
+  Created Res: additem.xml, added plus_sign.png
+  
+  The listings_content.xml and myitems_content.xml now include the floating add button. I also created AddItem screen
+  currently just has a post and cancel button but otherwise empty. Added floating add button functionality - launches
+  AddItem screen upon pressing. And post button launches MainListings and cancel button returns to previous screen.
+  NEED TO DO: Input fields in AddItem screen. Create database for items.
