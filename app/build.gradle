@@ -29,4 +29,10 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'com.android.support:design:28.0.0'
+    // Firebase SDKs
+    implementation 'com.google.firebase:firebase-analytics:17.2.1' // Google Analytics
+    implementation 'com.google.firebase:firebase-auth:19.1.0' // Firebase Authentication
+    implementation 'com.google.firebase:firebase-firestore:21.2.1' // Cloud Firestore
 }
+
+apply plugin: 'com.google.gms.google-services'
