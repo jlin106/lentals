@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        app:backgroundTint="#97FFEB3B"
-        android:src="@drawable/plus_sign" />
+        android:src="@drawable/plus_sign"
+        app:backgroundTint="#97FFEB3B" />
 
 </LinearLayout>
