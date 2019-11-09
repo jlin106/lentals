@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "199685066280",
-    "firebase_url": "https://hola-bed3e.firebaseio.com",
-    "project_id": "hola-bed3e",
-    "storage_bucket": "hola-bed3e.appspot.com"
+    "project_number": "660661002911",
+    "firebase_url": "https://lentals.firebaseio.com",
+    "project_id": "lentals",
+    "storage_bucket": "lentals.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:199685066280:android:72c9a0db3880bb573faf1d",
+        "mobilesdk_app_id": "1:660661002911:android:79be2cb61e1e64c126f8aa",
         "android_client_info": {
           "package_name": "com.riceandbeansand.lentals"
         }
       },
       "oauth_client": [
         {
-          "client_id": "199685066280-k7glnfjsspdakcppuuq7ddm7hu0aehri.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.riceandbeansand.lentals",
-            "certificate_hash": "e6c1417d744181df3ee6d1fe46d0fc4f593b51d8"
-          }
-        },
-        {
-          "client_id": "199685066280-5ptslqnso52k3qippfapkpjbb622sqej.apps.googleusercontent.com",
+          "client_id": "660661002911-uhj5art6l6gdfavp7ptu80n52r7vpd7i.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAkSKMhH-qhHD2avcCZBBav-cSCDie4K_k"
+          "current_key": "AIzaSyBEfXjyqr8kFWjigV43vcCevu6EUQH6-x8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "199685066280-5ptslqnso52k3qippfapkpjbb622sqej.apps.googleusercontent.com",
+              "client_id": "660661002911-uhj5art6l6gdfavp7ptu80n52r7vpd7i.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

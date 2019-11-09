@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
 
         //setup view
-        mainListingsFragment = new MainListingsFragment();
+        mainListingsFragment = new ListingsFragment();
         myItemsFragment = new MyItemsFragment();
         setContentView(R.layout.activity_main);
         getSupportFragmentManager().beginTransaction()
