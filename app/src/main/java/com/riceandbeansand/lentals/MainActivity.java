@@ -1,6 +1,8 @@
 package com.riceandbeansand.lentals;
 
+import com.facebook.login.LoginManager;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -72,12 +74,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // launch My Items fragment
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, myItemsFragment).commit();
+        } else if (id == R.id.logOut) {
+            logout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    private void logout() {
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
+
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
 
