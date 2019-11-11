@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
+// NOT USED
 public class MainListingsFragment extends Fragment {
 
     @Override
@@ -18,15 +19,15 @@ public class MainListingsFragment extends Fragment {
                                 Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        View view = inflater.inflate(R.layout.mainlistings_content, container, false);
+        View view = inflater.inflate(R.layout.listing, container, false);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Main Listings");
 
         FloatingActionButton fab = view.findViewById(R.id.main_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent intent = new Intent(MainListings.this, AddItem.class);
-                //startActivity(intent);
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)
+                        .replace(R.id.fragment_container, new AddItemFragment()).commit();
             }
         });
 

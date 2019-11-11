@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 
@@ -22,6 +23,8 @@ class ListingsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
+        (activity as AppCompatActivity).supportActionBar!!.title = "Main Listings"
+
         val db = FirebaseFirestore.getInstance()
         val l = ListingsItemSchema()
         Log.d("App", "L is $l")
@@ -31,7 +34,6 @@ class ListingsFragment : Fragment() {
                 .setQuery(query, ListingsItemSchema::class.java)
                 .setLifecycleOwner(this)
                 .build()
-
 
         val adapter = object : FirestoreRecyclerAdapter<ListingsItemSchema, ViewHolder>(options) {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -49,6 +51,13 @@ class ListingsFragment : Fragment() {
         val recyclerView = view.findViewById<View>(R.id.item_list) as RecyclerView
         recyclerView.layoutManager = GridLayoutManager(context, 2)
         recyclerView.adapter = adapter;
+
+        val fab = view.findViewById<View>(R.id.main_fab)
+        fab.setOnClickListener(View.OnClickListener {
+            activity!!.supportFragmentManager.beginTransaction().addToBackStack(null)
+                    .replace(R.id.fragment_container, AddItemFragment()).commit()
+        })
+
         return view
     }
 
