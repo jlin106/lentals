@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFDE3B"
+    android:background="@color/colorPrimary"
     tools:context=".MainActivity">
 
     <com.facebook.login.widget.LoginButton
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/montserrat_bold"
         android:text="lentals"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/black"
         android:textSize="90sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
