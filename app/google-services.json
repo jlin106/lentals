@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "660661002911",
+    "firebase_url": "https://lentals.firebaseio.com",
+    "project_id": "lentals",
+    "storage_bucket": "lentals.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:660661002911:android:79be2cb61e1e64c126f8aa",
+        "android_client_info": {
+          "package_name": "com.riceandbeansand.lentals"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "660661002911-5259as2rbpi7i78kj2286v9bu2jsvncj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.riceandbeansand.lentals",
+            "certificate_hash": "f1a31194cdecfed4d8ccecb2a2ccf6f3dfbe7c29"
+          }
+        },
+        {
+          "client_id": "660661002911-uhj5art6l6gdfavp7ptu80n52r7vpd7i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEfXjyqr8kFWjigV43vcCevu6EUQH6-x8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "660661002911-uhj5art6l6gdfavp7ptu80n52r7vpd7i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

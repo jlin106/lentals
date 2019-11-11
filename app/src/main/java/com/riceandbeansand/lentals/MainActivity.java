@@ -1,70 +1,97 @@
 package com.riceandbeansand.lentals;
 
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
+import com.facebook.login.LoginManager;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 
-import java.util.Arrays;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-public class MainActivity extends AppCompatActivity {
+    private Fragment mainListingsFragment;
+    private Fragment myItemsFragment;
+    private Fragment loginFragment;
 
-    CallbackManager callbackManager;
-    private static final String EMAIL = "email";
+    private boolean loggedIn = false; //this should be set in the Firebase db, here temporarily
 
-    protected void facebookSDKInitialize() {
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        callbackManager = CallbackManager.Factory.create();
-    }
+    private FragmentTransaction transaction;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+
+        //setup view
+        mainListingsFragment = new ListingsFragment();
+        myItemsFragment = new MyItemsFragment();
         setContentView(R.layout.activity_main);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, mainListingsFragment).commit();
 
-        facebookSDKInitialize();
 
-        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList(EMAIL));
+        //create toolbars
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Main Listings");
 
-        getLoginDetails(loginButton);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.main_nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-    }
 
-    protected void getLoginDetails(LoginButton loginButton){
-        // Callback registration
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult login_result) {
-                Intent intent = new Intent(MainActivity.this, MainListings.class);
-                startActivity(intent);
-            }
-            @Override
-            public void onCancel() {
-                // code for cancellation
-            }
-            @Override
-            public void onError(FacebookException exception) {
-                //  code to handle error
-            }
-        });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-        super.onActivityResult(requestCode, resultCode, data);
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.toMainListings) {
+            // launch Main Listings fragment
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, mainListingsFragment).commit();
+
+        } else if (id == R.id.toMyItems) {
+            // launch My Items fragment
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, myItemsFragment).commit();
+        } else if (id == R.id.logOut) {
+            logout();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
+        return true;
     }
+
+    private void logout() {
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
+
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+
 }
