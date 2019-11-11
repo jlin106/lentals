@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+        app:srcCompat="@drawable/com_facebook_profile_picture_blank_portrait" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -28,24 +28,12 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/firstNameLabel"
+            android:id="@+id/nameLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:fontFamily="@font/montserrat"
-            android:text="First Name"
-            android:textAlignment="center"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/lastNameLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:fontFamily="@font/montserrat"
-            android:text="Last Name"
+            android:fontFamily="@font/montserrat_bold"
             android:textAlignment="center"
             android:textSize="18sp" />
 

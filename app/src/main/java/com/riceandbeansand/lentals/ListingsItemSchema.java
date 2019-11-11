@@ -6,6 +6,7 @@ import android.util.Log;
 //Complained about missing no-arg constructor when have this in kotlin file which is disgusting and jank
 public class ListingsItemSchema {
     public String name;
+    public double price;
 
     // Needed for Firebase
     public void constructor() {

@@ -16,10 +16,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.text.DecimalFormat
 
 
 class ListingsFragment : Fragment() {
 
+    internal var money_format = DecimalFormat("$0.00")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
@@ -45,6 +47,7 @@ class ListingsFragment : Fragment() {
 
             override fun onBindViewHolder(holder: ViewHolder, position: Int, model: ListingsItemSchema) {
                 holder.view.findViewById<TextView>(R.id.name).setText(model.name)
+                holder.view.findViewById<TextView>(R.id.rate).setText(money_format.format(model.price));
             }
         }
 
