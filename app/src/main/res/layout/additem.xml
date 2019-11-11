@@ -1,20 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageHolder"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/chooseImageBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_launcher_foreground" />
+
+    <Button
+        android:id="@+id/chooseImageBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@color/colorPrimary"
+        android:fontFamily="@font/montserrat"
+        android:text="Choose Images"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/itemNameText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageHolder" />
+
+    <TextView
+        android:id="@+id/itemNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
+        android:textSize="18sp"
+        android:text="Item Name:"
+        app:layout_constraintBottom_toTopOf="@+id/rateText"
+        app:layout_constraintEnd_toStartOf="@+id/itemNameText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chooseImageBtn" />
+
+    <EditText
+        android:id="@+id/itemNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:ems="10"
+        android:fontFamily="@font/montserrat"
+        android:hint="enter item name"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/rateText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/itemNameLabel"
+        app:layout_constraintTop_toBottomOf="@+id/chooseImageBtn" />
+
+    <TextView
+        android:id="@+id/rateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
+        android:text="Daily Rate:"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/descriptionText"
+        app:layout_constraintEnd_toStartOf="@+id/rateText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemNameText" />
+
+    <EditText
+        android:id="@+id/rateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:fontFamily="@font/montserrat"
+        android:hint="enter daily rate"
+        app:layout_constraintBottom_toTopOf="@+id/descriptionText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/rateLabel"
+        app:layout_constraintTop_toBottomOf="@+id/itemNameText" />
+
+    <TextView
+        android:id="@+id/descriptionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat"
+        android:textSize="18sp"
+        android:text="Description:"
+        app:layout_constraintBottom_toTopOf="@+id/noPostBtn"
+        app:layout_constraintEnd_toStartOf="@+id/descriptionText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rateText" />
+
+    <EditText
+        android:id="@+id/descriptionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:fontFamily="@font/montserrat"
+        android:hint="add a description of your item"
+        app:layout_constraintBottom_toTopOf="@+id/noPostBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/descriptionLabel"
+        app:layout_constraintTop_toBottomOf="@+id/rateText" />
 
     <Button
         android:id="@+id/noPostBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="CANCEL" />
+        android:layout_marginBottom="16dp"
+        android:background="#BEF44336"
+        android:fontFamily="@font/montserrat"
+        android:text="CANCEL"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/postBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
 
     <Button
         android:id="@+id/postBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="POST" />
+        android:layout_marginBottom="16dp"
+        android:background="@color/colorPrimary"
+        android:fontFamily="@font/montserrat"
+        android:text="POST"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/noPostBtn"
+        app:layout_constraintBottom_toBottomOf="@+id/noPostBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/noPostBtn"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

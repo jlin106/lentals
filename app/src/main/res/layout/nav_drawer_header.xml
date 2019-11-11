@@ -21,12 +21,43 @@
         android:layout_weight="1"
         app:srcCompat="@drawable/com_facebook_profile_picture_blank_square" />
 
-    <TextView
-        android:id="@+id/usernameLabel"
+    <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="UserName"
-        android:textAlignment="center" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/firstNameLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserrat"
+            android:text="First Name"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/lastNameLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserrat"
+            android:text="Last Name"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/editProfileBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:fontFamily="@font/montserrat"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
 </LinearLayout>
