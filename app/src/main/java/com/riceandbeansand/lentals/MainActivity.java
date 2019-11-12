@@ -21,6 +21,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //setup view
         mainListingsFragment = new ListingsFragment();
-        myItemsFragment = new MyItemsFragment();
+//        myItemsFragment = new MyItemsFragment();
         setContentView(R.layout.activity_main);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, mainListingsFragment).commit();
@@ -71,13 +72,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onStart() {
+        View navHeader = ((NavigationView) findViewById(R.id.main_nav_view)).getHeaderView(0);
+
         super.onStart();
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
             // Get user name
             userName = user.getDisplayName();
-            TextView nameLabel = (TextView) findViewById(R.id.nameLabel);
+            TextView nameLabel = (TextView) navHeader.findViewById(R.id.nameLabel);
             nameLabel.setText(userName);
 
             for (UserInfo profile : user.getProviderData()) {
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 uid = profile.getUid();
             }
 
-            ProfilePictureView profilePictureView = (ProfilePictureView) findViewById(R.id.userProfilePic);
+            ProfilePictureView profilePictureView = (ProfilePictureView) navHeader.findViewById(R.id.userProfilePic);
             profilePictureView.setProfileId(uid);
         }
     }
