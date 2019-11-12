@@ -7,6 +7,7 @@ import android.util.Log;
 public class ListingsItemSchema {
     public String name;
     public double price;
+    public String image;
 
     // Needed for Firebase
     public void constructor() {

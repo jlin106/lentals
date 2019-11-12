@@ -18,6 +18,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import java.text.DecimalFormat
+import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import android.util.Base64
+import android.widget.ImageView
+
+
 
 
 class ListingsFragment : Fragment() {
@@ -56,6 +62,11 @@ class ListingsFragment : Fragment() {
             }
 
             override fun onBindViewHolder(holder: ViewHolder, position: Int, model: ListingsItemSchema) {
+                if (model.image != null ){
+                    val decodedString = Base64.decode(model.image, Base64.DEFAULT)
+                    val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+                    holder.view.findViewById<ImageView>(R.id.imageView).setImageBitmap(decodedByte)
+                }
                 holder.view.findViewById<TextView>(R.id.name).setText(model.name)
                 holder.view.findViewById<TextView>(R.id.rate).setText(money_format.format(model.price));
             }
