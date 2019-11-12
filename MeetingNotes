@@ -1,6 +1,6 @@
 Meeting Notes
 
-10/30/19 - Reem, Cameron, Jen
+Wednesday 10/30/19 - Reem, Cameron, Jen
 Main objectives for Sprint 1
 - Databases - using Firebase - dicuss as a group on specifics of how to organize --> Cameron 
 - Main Screens to work on: Launch Screen, Navigation Drawer - Main listings Screen, My Items Screen, Add Item
@@ -11,3 +11,28 @@ Main objectives for Sprint 1
   (4) Add Item - add items to database --> Cameron & Manan
 - Stand-up meetings: Monday (9:30 pm), Friday (5 pm) weekly
 - Meetings w/ Simon: Thursday (7:30 pm)
+
+Thursday 10/31/19 - Full Team w/ Simon
+
+Monday 11/4/19 - Full Team
+Updates:
+- Jen - finished Facebook log in integration and log-in screen
+- Cameron & Manan - will set up databases soon (end of week)
+- Reem - will start XMLs soon
+
+Thursday 11/7/19 - Full Team w/ Simon
+Updates:
+- Jen - finished navigation drawer set-up, nagivation functionality, floating add button
+- Cameron - converted drawer element activities into fragments
+- Reem - look into grid layout/recycler view for listings fragment
+- Manan - create Firebase databases and give everyone access
+
+Friday 11/8/19 - Full Team
+Updates:
+- Cameron & Manan - finished database, currently populating with hard coded elements
+- Reem - will work on image picking functionality for add item
+- Jen - will work on making add item XML, get user info from Facebook log in
+- Need to do: add item to database functionality
+
+Monday 11/11/19 - Full Team
+WORK ON PRESENTATION, DEMO, README and submit assignment
