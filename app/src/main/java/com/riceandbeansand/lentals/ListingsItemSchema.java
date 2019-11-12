@@ -8,6 +8,8 @@ public class ListingsItemSchema {
     public String name;
     public double price;
     public String image;
+    public String userName;
+    public String userID;
 
     // Needed for Firebase
     public void constructor() {

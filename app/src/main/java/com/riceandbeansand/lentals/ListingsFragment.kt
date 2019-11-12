@@ -27,7 +27,7 @@ import android.widget.ImageView
 
 class ListingsFragment : Fragment() {
 
-    internal val money_format = DecimalFormat("$0.00")
+    internal val money_format = DecimalFormat("$0")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
@@ -54,6 +54,7 @@ class ListingsFragment : Fragment() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
                 val view = LayoutInflater.from(parent.context)
                         .inflate(R.layout.listings_item, parent, false)
+                @Suppress
                 view.setClipToOutline(true)
                 return ViewHolder(view)
             }
@@ -63,6 +64,10 @@ class ListingsFragment : Fragment() {
                     val decodedString = Base64.decode(model.image, Base64.DEFAULT)
                     val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
                     holder.view.findViewById<ImageView>(R.id.imageView).setImageBitmap(decodedByte)
+                }
+                if (model.userName != null) {
+                    val username = "@" + model.userName.toLowerCase().replace(" ", "")
+                    holder.view.findViewById<TextView>(R.id.userName).text = username;
                 }
                 holder.view.findViewById<TextView>(R.id.name).setText(model.name)
                 holder.view.findViewById<TextView>(R.id.rate).setText(money_format.format(model.price));

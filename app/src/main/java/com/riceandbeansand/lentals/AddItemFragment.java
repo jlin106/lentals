@@ -51,7 +51,6 @@ public class AddItemFragment extends Fragment {
                 String[] mimeTypes = {"image/jpeg", "image/png"};
                 pickPhoto.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
                 startActivityForResult(pickPhoto, GALLERY_REQUEST_CODE);
-
             }
         });
 
@@ -105,10 +104,6 @@ public class AddItemFragment extends Fragment {
                                 Log.w("App", "Error writing document", e);
                             }
                         });
-                // TO DO: add item to database, return to where ever intent was sent
-                //Intent intent = new Intent(AddItem.this, MainListings.class);
-                //startActivity(intent);
-
             }
         });
 
