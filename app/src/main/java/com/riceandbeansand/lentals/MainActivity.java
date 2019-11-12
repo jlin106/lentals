@@ -1,9 +1,11 @@
 package com.riceandbeansand.lentals;
 
 import com.facebook.login.LoginManager;
+import com.facebook.login.widget.ProfilePictureView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean loggedIn = false; //this should be set in the Firebase db, here temporarily
     private FragmentTransaction transaction;
     String userName = "JOHN DOE"; //default user name
+    String uid = "";
 
 
     @Override
@@ -72,16 +75,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            // Name and profile photo Url
+            // Get user name
             userName = user.getDisplayName();
-            Uri photoUrl = user.getPhotoUrl();
-
             TextView nameLabel = (TextView) findViewById(R.id.nameLabel);
             nameLabel.setText(userName);
 
-            // Doesn't work
-            ImageView proPic = (ImageView) findViewById(R.id.userProfilePic);
-            proPic.setImageURI(photoUrl);
+            for (UserInfo profile : user.getProviderData()) {
+                // Get UID specific to the provider
+                uid = profile.getUid();
+            }
+
+            ProfilePictureView profilePictureView = (ProfilePictureView) findViewById(R.id.userProfilePic);
+            profilePictureView.setProfileId(uid);
         }
     }
 
