@@ -1,13 +1,9 @@
 package com.riceandbeansand.lentals;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +16,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -92,10 +86,6 @@ public class AddItemFragment extends Fragment {
                                 Log.w("App", "Error writing document", e);
                             }
                         });
-                // TO DO: add item to database, return to where ever intent was sent
-                //Intent intent = new Intent(AddItem.this, MainListings.class);
-                //startActivity(intent);
-
             }
         });
 
