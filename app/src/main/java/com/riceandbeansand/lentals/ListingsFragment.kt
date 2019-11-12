@@ -1,7 +1,6 @@
 package com.riceandbeansand.lentals
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,11 +17,17 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import java.text.DecimalFormat
+import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import android.util.Base64
+import android.widget.ImageView
+
+
 
 
 class ListingsFragment : Fragment() {
 
-    internal val money_format = DecimalFormat("$0.00")
+    internal val money_format = DecimalFormat("$0")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
@@ -40,8 +45,6 @@ class ListingsFragment : Fragment() {
             (activity as AppCompatActivity).supportActionBar!!.title = "My Items"
         }
 
-
-
         val options = FirestoreRecyclerOptions.Builder<ListingsItemSchema>()
                 .setQuery(query, ListingsItemSchema::class.java)
                 .setLifecycleOwner(this)
@@ -51,11 +54,21 @@ class ListingsFragment : Fragment() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
                 val view = LayoutInflater.from(parent.context)
                         .inflate(R.layout.listings_item, parent, false)
+                @Suppress
                 view.setClipToOutline(true)
                 return ViewHolder(view)
             }
 
             override fun onBindViewHolder(holder: ViewHolder, position: Int, model: ListingsItemSchema) {
+                if (model.image != null ){
+                    val decodedString = Base64.decode(model.image, Base64.DEFAULT)
+                    val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+                    holder.view.findViewById<ImageView>(R.id.imageView).setImageBitmap(decodedByte)
+                }
+                if (model.userName != null) {
+                    val username = "@" + model.userName.toLowerCase().replace(" ", "")
+                    holder.view.findViewById<TextView>(R.id.userName).text = username;
+                }
                 holder.view.findViewById<TextView>(R.id.name).setText(model.name)
                 holder.view.findViewById<TextView>(R.id.rate).setText(money_format.format(model.price));
             }

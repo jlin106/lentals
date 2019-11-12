@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +51,6 @@ public class AddItemFragment extends Fragment {
                 String[] mimeTypes = {"image/jpeg", "image/png"};
                 pickPhoto.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
                 startActivityForResult(pickPhoto, GALLERY_REQUEST_CODE);
-
             }
         });
 
@@ -63,11 +64,21 @@ public class AddItemFragment extends Fragment {
                 Double price = Double.parseDouble(((TextView) getView().findViewById(R.id.rateText)).getText().toString());
                 String itemName = ((TextView) getView().findViewById(R.id.itemNameText)).getText().toString();
 
-//                Uri imageURI = (Uri) ((ImageView) getView().findViewById(R.id.imageHolder)).getTag();
-//                Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageURI);
+                //get image as base64
+                String encodedString = "";
+                try {
+                    Uri imageURI = (Uri) ((ImageView) getView().findViewById(R.id.imageHolder)).getTag();
+                    Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageURI);
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                    byte[] byteArray = outputStream.toByteArray();
+                    encodedString = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                } catch (Exception e) {
+                    Log.d("App", "Failed to encode image " + e);
+                }
 
                 //Should validate stuff server side
-                if (itemName == "") {
+                if (itemName == "" || encodedString == "") {
                     return;
                 }
 
@@ -76,6 +87,7 @@ public class AddItemFragment extends Fragment {
                 docData.put("price", price);
                 docData.put("userID", userID);
                 docData.put("userName", userName); //should be gotten from userID/uid, but have to create users collection (keyed by uid) manually
+                docData.put("image", encodedString);
 
                 //not secure -- DB permissions are such that people can post under any userID
                 db.collection("items").document().set(docData)
@@ -92,10 +104,6 @@ public class AddItemFragment extends Fragment {
                                 Log.w("App", "Error writing document", e);
                             }
                         });
-                // TO DO: add item to database, return to where ever intent was sent
-                //Intent intent = new Intent(AddItem.this, MainListings.class);
-                //startActivity(intent);
-
             }
         });
 
