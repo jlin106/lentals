@@ -78,10 +78,10 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d("App", "signInWithCredential:success");
+                            finish();
                         } else {
                             Log.w("App", "signInWithCredential:failure", task.getException());
                         }
-                        finish();
                     }
                 });
             }

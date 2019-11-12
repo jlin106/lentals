@@ -46,12 +46,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
 
-        //setup view
+        //This isn't really a nice way to set the items that the listingsFragment displays. Query is not serializable.
+        //Handles case of fragment refreshing. Which calling method on fragment to set item would not do.
+        Bundle args = new Bundle();
+        args.putString("queryType", "mainItems");
         mainListingsFragment = new ListingsFragment();
-//        myItemsFragment = new MyItemsFragment();
-        setContentView(R.layout.activity_main);
+        mainListingsFragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, mainListingsFragment).commit();
+
+        setContentView(R.layout.activity_main);
 
 
         //create toolbars
@@ -99,14 +103,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.toMainListings) {
-            // launch Main Listings fragment
+            Bundle args = new Bundle();
+            args.putString("queryType", "mainItems");
+            mainListingsFragment = new ListingsFragment();
+            mainListingsFragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, mainListingsFragment).commit();
 
         } else if (id == R.id.toMyItems) {
-            // launch My Items fragment
+            Bundle args = new Bundle();
+            args.putString("queryType", "myItems");
+            mainListingsFragment = new ListingsFragment();
+            mainListingsFragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, myItemsFragment).commit();
+                    .replace(R.id.fragment_container, mainListingsFragment).commit();
         } else if (id == R.id.logOut) {
             logout();
         }
