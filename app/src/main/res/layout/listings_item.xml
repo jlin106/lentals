@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:layout_margin="10sp"
     android:elevation="6sp"
-    android:clipToOutline="true"
     android:background="@drawable/rounded_rectangle"
     app:layout_constraintDimensionRatio="1.0">
 
