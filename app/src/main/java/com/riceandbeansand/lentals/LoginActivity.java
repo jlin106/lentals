@@ -68,6 +68,9 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                findViewById(R.id.login_button).setVisibility(View.GONE);
+                TextView label = (TextView) findViewById(R.id.signInLabel);
+                label.setText("Logging in....");
                 AccessToken token = loginResult.getAccessToken();
                 AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
                 mAuth.signInWithCredential(credential).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -98,4 +101,5 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
+
 }
