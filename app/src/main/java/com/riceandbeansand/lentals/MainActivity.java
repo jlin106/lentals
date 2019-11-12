@@ -16,22 +16,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.io.InputStream;
-import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Fragment mainListingsFragment;
-    private Fragment myItemsFragment;
     private FirebaseAuth mAuth;
     private boolean loggedIn = false; //this should be set in the Firebase db, here temporarily
     private FragmentTransaction transaction;

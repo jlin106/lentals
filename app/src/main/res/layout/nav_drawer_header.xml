@@ -36,7 +36,6 @@
         android:fontFamily="@font/montserrat_bold"
         android:text="User Name"
         android:textAlignment="center"
-        android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
