@@ -1,11 +1,13 @@
 package com.riceandbeansand.lentals;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -30,13 +32,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import org.w3c.dom.Text;
+
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-
     CallbackManager callbackManager;
     private static final String EMAIL = "email";
-    private Fragment mainListingsFragment;
+    String userName = "JOHN DOE"; //default user name
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,23 +54,14 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login_screen);
 
         // setup facebook
-        facebookSDKInitialize();
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
 
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList(EMAIL));
 
         getLoginDetails(loginButton);
-
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
-
     }
-
-    protected void facebookSDKInitialize() {
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        callbackManager = CallbackManager.Factory.create();
-    }
-
 
     protected void getLoginDetails(LoginButton loginButton){
         // Callback registration
@@ -80,11 +74,11 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            finish();
                             Log.d("App", "signInWithCredential:success");
                         } else {
                             Log.w("App", "signInWithCredential:failure", task.getException());
                         }
+                        finish();
                     }
                 });
             }

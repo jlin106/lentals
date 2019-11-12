@@ -25,6 +25,7 @@ public class AddItemFragment extends Fragment {
                 Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.additem, container, false);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Add Item");
 
         final Button chooseImageBtn = view.findViewById(R.id.chooseImageBtn);
         chooseImageBtn.setOnClickListener(new View.OnClickListener() {
