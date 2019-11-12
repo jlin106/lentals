@@ -4,15 +4,29 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.w3c.dom.Text;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -43,6 +57,41 @@ public class AddItemFragment extends Fragment {
         final Button postItem = view.findViewById(R.id.postBtn);
         postItem.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                Double price = Double.parseDouble(((TextView) getView().findViewById(R.id.rateText)).getText().toString());
+                String itemName = ((TextView) getView().findViewById(R.id.itemNameText)).getText().toString();
+
+//                Uri imageURI = (Uri) ((ImageView) getView().findViewById(R.id.imageHolder)).getTag();
+//                Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageURI);
+
+                //Should validate stuff server side
+                if (itemName == "") {
+                    return;
+                }
+
+                Map<String, Object> docData = new HashMap<>();
+                docData.put("name", itemName);
+                docData.put("price", price);
+                docData.put("userID", userID);
+                docData.put("userName", userName); //should be gotten from userID/uid, but have to create users collection (keyed by uid) manually
+
+                //not secure -- DB permissions are such that people can post under any userID
+                db.collection("items").document().set(docData)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("App", "DocumentSnapshot successfully written!");
+                                getActivity().getSupportFragmentManager().popBackStack();;
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("App", "Error writing document", e);
+                            }
+                        });
                 // TO DO: add item to database, return to where ever intent was sent
                 //Intent intent = new Intent(AddItem.this, MainListings.class);
                 //startActivity(intent);
@@ -68,7 +117,9 @@ public class AddItemFragment extends Fragment {
                 case GALLERY_REQUEST_CODE:
                     //data.getData returns the content URI for the selected Image
                     Uri selectedImage = data.getData();
-                    ((ImageView) getView().findViewById(R.id.imageHolder)).setImageURI(selectedImage);
+                    ImageView imageHolder =((ImageView) getView().findViewById(R.id.imageHolder));
+                    imageHolder.setImageURI(selectedImage);
+                    imageHolder.setTag(selectedImage);
                     break;
             }
         }

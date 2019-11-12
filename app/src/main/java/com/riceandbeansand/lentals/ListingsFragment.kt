@@ -16,22 +16,32 @@ import com.google.firebase.firestore.FirebaseFirestore
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import java.text.DecimalFormat
 
 
 class ListingsFragment : Fragment() {
 
-    internal var money_format = DecimalFormat("$0.00")
+    internal val money_format = DecimalFormat("$0.00")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        (activity as AppCompatActivity).supportActionBar!!.title = "Main Listings"
-
         val db = FirebaseFirestore.getInstance()
-        val l = ListingsItemSchema()
-        Log.d("App", "L is $l")
+        val queryString = getArguments()?.getString("queryType")
+        var query = db.collection("items").orderBy("name")
 
-        val query = db.collection("items").orderBy("name")
+        if (queryString == "mainItems") {
+            query = db.collection("items").orderBy("name")
+            (activity as AppCompatActivity).supportActionBar!!.title = "Main Listings"
+        }
+        else if (queryString == "myItems") {
+            val userID = FirebaseAuth.getInstance().currentUser?.uid
+            query = db.collection("items").orderBy("name").whereEqualTo("userID", userID)
+            (activity as AppCompatActivity).supportActionBar!!.title = "My Items"
+        }
+
+
+
         val options = FirestoreRecyclerOptions.Builder<ListingsItemSchema>()
                 .setQuery(query, ListingsItemSchema::class.java)
                 .setLifecycleOwner(this)
@@ -63,6 +73,10 @@ class ListingsFragment : Fragment() {
         })
 
         return view
+    }
+
+    fun setAdaptorQuery() {
+
     }
 
     internal inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
