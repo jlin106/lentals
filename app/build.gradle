@@ -39,6 +39,7 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-firestore:6.0.2'
     compile "androidx.core:core-ktx:+"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

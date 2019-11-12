@@ -7,6 +7,9 @@
         android:id="@+id/toMainListings"
         android:title="Main Listings" />
     <item
+        android:id="@+id/toMaps"
+        android:title="Map" />
+    <item
         android:id="@+id/toMyItems"
         android:title="My Items" />
     <item
