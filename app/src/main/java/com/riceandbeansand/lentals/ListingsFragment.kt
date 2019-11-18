@@ -18,11 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import java.text.DecimalFormat
 import android.graphics.BitmapFactory
-import android.graphics.Bitmap
 import android.util.Base64
 import android.widget.ImageView
-
-
 
 
 class ListingsFragment : Fragment() {

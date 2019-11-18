@@ -25,9 +25,6 @@ import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
-import org.w3c.dom.Text;
 
 public class LoginActivity extends AppCompatActivity {
 

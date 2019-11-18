@@ -2,7 +2,6 @@ package com.riceandbeansand.lentals;
 
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
