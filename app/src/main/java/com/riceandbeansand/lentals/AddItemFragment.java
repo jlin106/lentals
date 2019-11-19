@@ -59,6 +59,7 @@ public class AddItemFragment extends Fragment {
                 String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
                 Double price = Double.parseDouble(((TextView) getView().findViewById(R.id.rateText)).getText().toString());
                 String itemName = ((TextView) getView().findViewById(R.id.itemNameText)).getText().toString();
+                String description = ((TextView) getView().findViewById(R.id.descriptionText)).getText().toString();
 
                 //get image as base64
                 String encodedString = "";
@@ -84,6 +85,7 @@ public class AddItemFragment extends Fragment {
                 docData.put("userID", userID);
                 docData.put("userName", userName); //should be gotten from userID/uid, but have to create users collection (keyed by uid) manually
                 docData.put("image", encodedString);
+                docData.put("descrip", description);
 
                 //not secure -- DB permissions are such that people can post under any userID
                 db.collection("items").document().set(docData)

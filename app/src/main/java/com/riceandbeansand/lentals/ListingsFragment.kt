@@ -68,6 +68,11 @@ class ListingsFragment : Fragment() {
                 }
                 holder.view.findViewById<TextView>(R.id.name).setText(model.name)
                 holder.view.findViewById<TextView>(R.id.rate).setText(money_format.format(model.price));
+
+                holder.view.setOnClickListener(View.OnClickListener {
+                    activity!!.supportFragmentManager.beginTransaction().addToBackStack(null)
+                            .replace(R.id.fragment_container, ItemProfileFragment()).commit()
+                })
             }
         }
 

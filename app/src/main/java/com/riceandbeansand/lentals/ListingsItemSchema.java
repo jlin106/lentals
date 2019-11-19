@@ -10,6 +10,7 @@ public class ListingsItemSchema {
     public String image;
     public String userName;
     public String userID;
+    public String descrip;
 
     // Needed for Firebase
     public void constructor() {
