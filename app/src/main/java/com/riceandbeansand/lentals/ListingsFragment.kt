@@ -11,7 +11,6 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 
 import com.google.firebase.firestore.FirebaseFirestore
 
-
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -70,8 +69,13 @@ class ListingsFragment : Fragment() {
                 holder.view.findViewById<TextView>(R.id.rate).setText(money_format.format(model.price));
 
                 holder.view.setOnClickListener(View.OnClickListener {
+                    val itemProfile = ItemProfileFragment()
+                    val args = Bundle()
+                    args.putString("itemID", model.uid)
+                    itemProfile.arguments = args
+
                     activity!!.supportFragmentManager.beginTransaction().addToBackStack(null)
-                            .replace(R.id.fragment_container, ItemProfileFragment()).commit()
+                            .replace(R.id.fragment_container, itemProfile).commit()
                 })
             }
         }

@@ -14,7 +14,7 @@
 
         <ImageView
             android:id="@+id/ImageView_ip"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
@@ -28,13 +28,13 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="#F7F2F2"
-            app:layout_constraintBottom_toTopOf="@+id/item_description"
+            app:layout_constraintBottom_toTopOf="@id/descrip_ip"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ImageView_ip">
 
             <TextView
-                android:id="@+id/name"
+                android:id="@+id/name_ip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -60,7 +60,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/item_description"
+            android:id="@+id/descrip_ip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView"
@@ -78,48 +78,31 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_description">
+            app:layout_constraintTop_toBottomOf="@id/descrip_ip">
 
-            <LinearLayout
-                android:id="@+id/linearLayout2"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/userName_ip"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:orientation="vertical"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:lines="1"
+                android:text="TextView"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/message_btn"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/fullname_ip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:text="TextView"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/userName2_ip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="TextView"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/message_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/com_facebook_button_background"
                 android:text="Message!"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/linearLayout2"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
