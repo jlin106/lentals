@@ -49,7 +49,7 @@ public class ItemProfileFragment extends Fragment {
         final TextView rateIP = (TextView) view.findViewById(R.id.rate_ip);
         final TextView descripIP = (TextView) view.findViewById(R.id.descrip_ip);
         final TextView userNameIP = (TextView) view.findViewById(R.id.userName_ip);
-        final ImageView imageIP = (ImageView) view.findViewById(R.id.ImageView_ip);
+        final ImageView imageIP = (ImageView) view.findViewById(R.id.imageView_ip);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference item = db.collection("items").document(itemID);

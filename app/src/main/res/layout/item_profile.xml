@@ -9,29 +9,38 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10sp"
-        android:background="@drawable/rounded_rectangle"
-        app:layout_constraintDimensionRatio="1.0">
-
-        <ImageView
-            android:id="@+id/ImageView_ip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+        android:background="@drawable/rounded_rectangle">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
+            android:id="@+id/constraintLayout3"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout1"
+            app:layout_constraintDimensionRatio="1.0"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imageView_ip"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:background="#F7F2F2"
             app:layout_constraintBottom_toTopOf="@id/descrip_ip"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ImageView_ip">
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
 
             <TextView
                 android:id="@+id/name_ip"
@@ -63,17 +72,22 @@
             android:id="@+id/descrip_ip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
             android:text="TextView"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/constraintLayout2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/constraintLayout" />
+            app:layout_constraintTop_toBottomOf="@id/constraintLayout1" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout2"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:background="#F7F2F2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -98,7 +112,9 @@
                 android:id="@+id/message_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/com_facebook_button_background"
                 android:text="Message!"
                 app:layout_constraintBottom_toBottomOf="parent"
