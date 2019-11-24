@@ -1,14 +1,20 @@
 package com.riceandbeansand.lentals;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -80,6 +86,46 @@ public class ItemProfileFragment extends Fragment {
             }
         });
 
+        final Button messageBtn = (Button) view.findViewById(R.id.message_btn);
+        messageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isFBInstalled = isAppInstalled("com.facebook.orca");
+
+                if (!isFBInstalled) {
+                    Toast.makeText(getActivity(),
+                            "Facebook messenger isn't installed. Please download the app first.",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent= new Intent();
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_TEXT, "Hello, is this still available?");
+                    intent.setType("text/plain");
+                    intent.setPackage("com.facebook.orca");
+
+                    try {
+                        startActivity(intent);
+                    } catch (ActivityNotFoundException ex) {
+                        Toast.makeText(getActivity(),
+                                "Sorry! Can't open Facebook messenger right now. Please try again later.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
         return view;
+    }
+
+    private boolean isAppInstalled(String uri) {
+        PackageManager pm = getActivity().getPackageManager();
+        boolean installed = false;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            installed = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            installed = false;
+        }
+        return installed;
     }
 }

@@ -18,6 +18,8 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
@@ -55,11 +57,19 @@ public class AddItemFragment extends Fragment {
         postItem.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                String userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                FirebaseUser user = mAuth.getCurrentUser();
+                String userID = user.getUid();
+                String userName = user.getDisplayName();
                 Double price = Double.parseDouble(((TextView) getView().findViewById(R.id.rateText)).getText().toString());
                 String itemName = ((TextView) getView().findViewById(R.id.itemNameText)).getText().toString();
                 String description = ((TextView) getView().findViewById(R.id.descriptionText)).getText().toString();
+//                String profileId = "";
+//                String photoUrl = "";
+//                for (UserInfo profile : user.getProviderData()) {
+//                    profileId = profile.getUid();
+//                    photoUrl = profile.getPhotoUrl().toString();
+//                }
 
                 //get image as base64
                 String encodedString = "";
