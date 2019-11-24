@@ -46,11 +46,10 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login_screen);
 
         // setup facebook
-        FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
 
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList(EMAIL));
+        loginButton.setPermissions(Arrays.asList(EMAIL));
 
         getLoginDetails(loginButton);
     }

@@ -22,6 +22,10 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
@@ -37,12 +41,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.1.0' // Firebase Authentication
     implementation 'com.google.firebase:firebase-firestore:21.2.1' // Cloud Firestore
     implementation 'com.firebaseui:firebase-ui-firestore:6.0.2'
-    compile "androidx.core:core-ktx:+"
+    implementation "androidx.core:core-ktx:+"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
-repositories {
-    mavenCentral()
-}
