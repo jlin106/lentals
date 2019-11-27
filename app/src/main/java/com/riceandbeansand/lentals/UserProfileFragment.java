@@ -22,7 +22,7 @@ public class UserProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.user_profile, container, false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Item Profile");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("User Profile");
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
