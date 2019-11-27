@@ -71,49 +71,126 @@
             android:id="@+id/constraintLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@color/colorPrimary"
-            app:layout_constraintBottom_toTopOf="@id/descrip_ip"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/constraintLayout3">
+            app:layout_constraintTop_toBottomOf="@id/constraintLayout3"
+            app:layout_constraintBottom_toTopOf="@id/descrip_ip"
+            android:padding="8dp">
 
-            <Button
-                android:id="@+id/userName_ip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@color/colorPrimary"
-                android:fontFamily="@font/montserrat"
-                android:text="TextView"
-                android:textSize="24sp"
-                style="?android:attr/borderlessButtonStyle"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/message_btn"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/profilePictureContainer"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_margin="8dp"
+                android:background="@drawable/rounded_rectangle"
+                app:layout_constraintDimensionRatio="1.0"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintEnd_toStartOf="@id/textContainer"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
 
-            <Button
-                android:id="@+id/message_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/com_facebook_button_background"
-                android:fontFamily="@font/montserrat"
-                android:text="Message"
-                android:textColor="#FFFFFFFF"
+                <com.facebook.login.widget.ProfilePictureView
+                    android:id="@+id/userProfilePic_ip"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    tools:layout_editor_absoluteX="8dp"
+                    tools:layout_editor_absoluteY="8dp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/textContainer"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_margin="8dp"
+                android:padding="2dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/profilePictureContainer"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/userName_ip"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintHorizontal_bias="0.0">
 
+                <TextView
+                    android:id="@+id/userName_ip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="4dp"
+                    android:layout_marginVertical="2dp"
+                    android:fontFamily="@font/montserrat"
+                    android:text="TextView"
+                    android:textSize="20sp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/profilePictureContainer" />
+
+                <Button
+                    android:id="@+id/message_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="4dp"
+                    android:layout_marginVertical="2dp"
+                    android:background="@drawable/com_facebook_button_background"
+                    android:fontFamily="@font/montserrat"
+                    android:text="Message"
+                    android:textColor="#FFFFFFFF"
+                    app:layout_constraintBottom_toBottomOf="@id/profilePictureContainer"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:id="@+id/constraintLayout2"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:layout_marginBottom="8dp"-->
+<!--            android:background="@color/colorPrimary"-->
+<!--            app:layout_constraintBottom_toTopOf="@id/descrip_ip"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/constraintLayout3">-->
+
+<!--            <Button-->
+<!--                android:id="@+id/userName_ip"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="8dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:background="@color/colorPrimary"-->
+<!--                android:fontFamily="@font/montserrat"-->
+<!--                android:text="TextView"-->
+<!--                android:textSize="24sp"-->
+<!--                style="?android:attr/borderlessButtonStyle"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toStartOf="@+id/message_btn"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--            <Button-->
+<!--                android:id="@+id/message_btn"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:layout_marginEnd="8dp"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:background="@drawable/com_facebook_button_background"-->
+<!--                android:fontFamily="@font/montserrat"-->
+<!--                android:text="Message"-->
+<!--                android:textColor="#FFFFFFFF"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/userName_ip"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
         <TextView
             android:id="@+id/descrip_ip"

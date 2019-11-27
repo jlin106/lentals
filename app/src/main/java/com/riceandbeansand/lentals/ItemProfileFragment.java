@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.facebook.login.widget.ProfilePictureView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -55,8 +57,10 @@ public class ItemProfileFragment extends Fragment {
         final TextView nameIP = (TextView) view.findViewById(R.id.name_ip);
         final TextView rateIP = (TextView) view.findViewById(R.id.rate_ip);
         final TextView descripIP = (TextView) view.findViewById(R.id.descrip_ip);
-        final Button userNameIP = (Button) view.findViewById(R.id.userName_ip);
+        final TextView userNameIP = (TextView) view.findViewById(R.id.userName_ip);
         final ImageView imageIP = (ImageView) view.findViewById(R.id.imageView_ip);
+        view.findViewById(R.id.profilePictureContainer).setClipToOutline(true);
+        final ProfilePictureView profilePictureIP = (ProfilePictureView) view.findViewById(R.id.userProfilePic_ip);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference item = db.collection("items").document(itemID);
@@ -79,6 +83,7 @@ public class ItemProfileFragment extends Fragment {
                         rateIP.setText(money_format.format(price));
                         descripIP.setText(descrip);
                         userNameIP.setText(userName);
+                        profilePictureIP.setProfileId(profileId);
 
                         byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
                         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -89,8 +94,7 @@ public class ItemProfileFragment extends Fragment {
             }
         });
 
-        final Button userProfBtn = (Button) view.findViewById(R.id.userName_ip);
-        userProfBtn.setOnClickListener(new View.OnClickListener() {
+        profilePictureIP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle args = new Bundle();
