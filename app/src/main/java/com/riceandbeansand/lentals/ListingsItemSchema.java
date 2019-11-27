@@ -14,6 +14,7 @@ public class ListingsItemSchema {
     public String image;
     public String userName;
     public String userID;
+    public String profileID;
     public String descrip;
 
     // Needed for Firebase

@@ -64,12 +64,10 @@ public class AddItemFragment extends Fragment {
                 Double price = Double.parseDouble(((TextView) getView().findViewById(R.id.rateText)).getText().toString());
                 String itemName = ((TextView) getView().findViewById(R.id.itemNameText)).getText().toString();
                 String description = ((TextView) getView().findViewById(R.id.descriptionText)).getText().toString();
-//                String profileId = "";
-//                String photoUrl = "";
-//                for (UserInfo profile : user.getProviderData()) {
-//                    profileId = profile.getUid();
-//                    photoUrl = profile.getPhotoUrl().toString();
-//                }
+                String profileId = "";
+                for (UserInfo profile : user.getProviderData()) {
+                    profileId = profile.getUid();
+                }
 
                 //get image as base64
                 String encodedString = "";
@@ -96,6 +94,7 @@ public class AddItemFragment extends Fragment {
                 docData.put("userName", userName); //should be gotten from userID/uid, but have to create users collection (keyed by uid) manually
                 docData.put("image", encodedString);
                 docData.put("descrip", description);
+                docData.put("profileID", profileId);
 
                 //not secure -- DB permissions are such that people can post under any userID
                 db.collection("items").document().set(docData)

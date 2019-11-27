@@ -64,7 +64,7 @@ class ListingsFragment : Fragment() {
                 }
                 if (model.userName != null) {
                     val username = "@" + model.userName.toLowerCase().replace(" ", "")
-                    holder.view.findViewById<TextView>(R.id.userName).text = username;
+                    holder.view.findViewById<TextView>(R.id.userName).text = username
                 }
                 holder.view.findViewById<TextView>(R.id.name).setText(model.name)
                 holder.view.findViewById<TextView>(R.id.rate).setText(money_format.format(model.price));
@@ -84,7 +84,7 @@ class ListingsFragment : Fragment() {
         val view = inflater.inflate(R.layout.listing, container, false)
         val recyclerView = view.findViewById<View>(R.id.item_list) as RecyclerView
         recyclerView.layoutManager = GridLayoutManager(context, 2)
-        recyclerView.adapter = adapter;
+        recyclerView.adapter = adapter
 
         val fab = view.findViewById<View>(R.id.main_fab)
         fab.setOnClickListener(View.OnClickListener {

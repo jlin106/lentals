@@ -38,6 +38,7 @@ public class ItemProfileFragment extends Fragment {
     private String userName;
     private String descrip;
     private String userId;
+    private String profileId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,6 +73,7 @@ public class ItemProfileFragment extends Fragment {
                         userName = document.getString("userName");
                         descrip = document.getString("descrip");
                         userId = document.getString("userID");
+                        profileId = document.getString("profileID");
 
                         nameIP.setText(name);
                         rateIP.setText(money_format.format(price));
@@ -94,6 +96,7 @@ public class ItemProfileFragment extends Fragment {
                 Bundle args = new Bundle();
                 args.putString("name", userName);
                 args.putString("userId", userId);
+                args.putString("profileId", profileId);
                 Fragment userProfile = new UserProfileFragment(); // userProfile fragment
                 userProfile.setArguments(args);
                 getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)
