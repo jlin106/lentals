@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth
 import java.text.DecimalFormat
 import android.graphics.BitmapFactory
 import android.util.Base64
+import android.util.Log
 import android.widget.ImageView
 
 
@@ -28,17 +29,17 @@ class ListingsFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
 
         val db = FirebaseFirestore.getInstance()
-        val queryString = getArguments()?.getString("queryType")
+        val queryString = arguments?.getString("queryType")
+        val userId = arguments?.getString("userId", FirebaseAuth.getInstance().currentUser?.uid)
         var query = db.collection("items").orderBy("name")
 
         if (queryString == "mainItems") {
             query = db.collection("items").orderBy("name")
             (activity as AppCompatActivity).supportActionBar!!.title = "Main Listings"
         }
-        else if (queryString == "myItems") {
-            val userID = FirebaseAuth.getInstance().currentUser?.uid
-            query = db.collection("items").orderBy("name").whereEqualTo("userID", userID)
-            (activity as AppCompatActivity).supportActionBar!!.title = "My Items"
+        else if (queryString == "userItems") {
+            query = db.collection("items").orderBy("name").whereEqualTo("userID", userId)
+//            (activity as AppCompatActivity).supportActionBar!!.title = "Items"
         }
 
         val options = FirestoreRecyclerOptions.Builder<ListingsItemSchema>()

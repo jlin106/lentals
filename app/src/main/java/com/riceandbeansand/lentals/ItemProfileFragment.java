@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +37,7 @@ public class ItemProfileFragment extends Fragment {
     private String image;
     private String userName;
     private String descrip;
+    private String userId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,7 +54,7 @@ public class ItemProfileFragment extends Fragment {
         final TextView nameIP = (TextView) view.findViewById(R.id.name_ip);
         final TextView rateIP = (TextView) view.findViewById(R.id.rate_ip);
         final TextView descripIP = (TextView) view.findViewById(R.id.descrip_ip);
-        final TextView userNameIP = (TextView) view.findViewById(R.id.userName_ip);
+        final Button userNameIP = (Button) view.findViewById(R.id.userName_ip);
         final ImageView imageIP = (ImageView) view.findViewById(R.id.imageView_ip);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -71,6 +71,7 @@ public class ItemProfileFragment extends Fragment {
                         image = document.getString("image");
                         userName = document.getString("userName");
                         descrip = document.getString("descrip");
+                        userId = document.getString("userID");
 
                         nameIP.setText(name);
                         rateIP.setText(money_format.format(price));
@@ -83,6 +84,20 @@ public class ItemProfileFragment extends Fragment {
 
                     }
                 }
+            }
+        });
+
+        final Button userProfBtn = (Button) view.findViewById(R.id.userName_ip);
+        userProfBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle args = new Bundle();
+                args.putString("name", userName);
+                args.putString("userId", userId);
+                Fragment userProfile = new UserProfileFragment(); // userProfile fragment
+                userProfile.setArguments(args);
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)
+                        .replace(R.id.fragment_container, userProfile).commit();
             }
         });
 
