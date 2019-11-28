@@ -30,6 +30,7 @@ class ListingsFragment : Fragment() {
 
         val db = FirebaseFirestore.getInstance()
         val queryString = arguments?.getString("queryType")
+        val actualUserId = FirebaseAuth.getInstance().currentUser?.uid.toString();
         val userId = arguments?.getString("userId", FirebaseAuth.getInstance().currentUser?.uid)
         var query = db.collection("items").orderBy("name")
 
@@ -91,6 +92,10 @@ class ListingsFragment : Fragment() {
             activity!!.supportFragmentManager.beginTransaction().addToBackStack(null)
                     .replace(R.id.fragment_container, AddItemFragment()).commit()
         })
+
+        if (queryString == "userItems" && !userId.equals(actualUserId)) {
+            fab.visibility=View.INVISIBLE
+        }
 
         return view
     }
