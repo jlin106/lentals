@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 
 import com.facebook.login.widget.ProfilePictureView;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -112,6 +113,18 @@ public class ItemProfileFragment extends Fragment {
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle args = new Bundle();
+                String currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
+                boolean lesser = currentUserID.compareTo(userId) < 0; //need chatID that is same if currentUserID and userId are swapped. So always put "lesser" id first.
+                String chatID = lesser ? currentUserID + userId : userId + currentUserID; //this is how the chatID is defined; not safe since userId might not be defined yet
+                args.putString("chatID", chatID);
+                Fragment chatFragment = new ChatFragment();
+                chatFragment.setArguments(args);
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)
+                        .replace(R.id.fragment_container, chatFragment).commit();
+
+                //Voiding below for now
+                /*
                 boolean isFBInstalled = isAppInstalled("com.facebook.orca");
 
                 if (!isFBInstalled) {
@@ -132,7 +145,7 @@ public class ItemProfileFragment extends Fragment {
                                 "Sorry! Can't open Facebook messenger right now. Please try again later.",
                                 Toast.LENGTH_SHORT).show();
                     }
-                }
+                }*/
             }
         });
 
