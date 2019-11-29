@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +26,7 @@ public class UserProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.user_profile, container, false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("User Profile");
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("User Profile");
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -41,6 +42,23 @@ public class UserProfileFragment extends Fragment {
         userNameView.setText(name);
         ProfilePictureView profilePictureView = (ProfilePictureView) view.findViewById(R.id.userProfilePic);
         profilePictureView.setProfileId(profileId);
+
+        final Button messageBtn = (Button) view.findViewById(R.id.message_btn);
+        messageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle args = new Bundle();
+                String currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                boolean lesser = currentUserID.compareTo(userId) < 0;
+                String chatID = lesser ? currentUserID + userId : userId + currentUserID;
+                args.putString("chatID", chatID);
+                args.putString("name", name);
+                Fragment chatFragment = new ChatFragment();
+                chatFragment.setArguments(args);
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)
+                        .replace(R.id.fragment_container, chatFragment).commit();
+            }
+        });
 
         Bundle args = new Bundle();
         args.putString("queryType", "userItems");

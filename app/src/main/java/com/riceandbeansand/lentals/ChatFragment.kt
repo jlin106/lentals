@@ -1,47 +1,42 @@
 package com.riceandbeansand.lentals
 
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.chat.*
-import java.text.DecimalFormat
-import java.util.HashMap
 
 class ChatFragment: Fragment() {
 
-    var currentUserID : String? = null;
+    var currentUserID : String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        currentUserID = FirebaseAuth.getInstance().currentUser?.uid.toString();
+        currentUserID = FirebaseAuth.getInstance().currentUser?.uid.toString()
         val chatID = arguments!!.getString("chatID")!!
         val db = FirebaseFirestore.getInstance()
         var query = db.collection("chats").document(chatID).collection("messages").orderBy("timestamp")
-
+        (activity as AppCompatActivity).supportActionBar!!.title = arguments?.getString("name", "UNKNOWN")
 
         val view = inflater.inflate(R.layout.chat, container, false)
         view.findViewById<Button>(R.id.sendButton).setOnClickListener(View.OnClickListener {
             val messageTextView = view.findViewById<EditText>(R.id.messageText)
             val message = messageTextView.text.toString()
-            Log.d("app", "message is" + message)
+            Log.d("app", "message is " + message)
             val currentTime = System.currentTimeMillis()
 
             val docData = hashMapOf(
@@ -71,8 +66,10 @@ class ChatFragment: Fragment() {
 
             override fun onBindViewHolder(holder: ChatFragment.ViewHolder, position: Int, model: ChatItemSchema) {
                 holder.view.findViewById<TextView>(R.id.messageBubbleText).text = model.message
-                if (model.senderID.equals(currentUserID)) {
-                    holder.view.setBackgroundColor(Color.CYAN);
+                if (model.senderID == currentUserID) {
+                    (holder.view.findViewById<View>(R.id.dummyView).layoutParams as LinearLayout.LayoutParams).weight = 1.0f
+                    holder.view.findViewById<TextView>(R.id.messageBubbleText).setBackgroundResource(R.drawable.outgoing_chat_rounded_rectangle)
+                    holder.view.findViewById<TextView>(R.id.messageBubbleText).setTextColor(Color.WHITE)
                 }
             }
         }

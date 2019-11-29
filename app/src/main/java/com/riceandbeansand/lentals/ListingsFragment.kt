@@ -40,7 +40,7 @@ class ListingsFragment : Fragment() {
         }
         else if (queryString == "userItems") {
             query = db.collection("items").orderBy("name").whereEqualTo("userID", userId)
-//            (activity as AppCompatActivity).supportActionBar!!.title = "Items"
+            (activity as AppCompatActivity).supportActionBar!!.title = if (arguments?.getString("userId") == null) "My Items" else "Profile"
         }
 
         val options = FirestoreRecyclerOptions.Builder<ListingsItemSchema>()

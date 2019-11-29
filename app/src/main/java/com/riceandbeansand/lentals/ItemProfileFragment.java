@@ -114,10 +114,11 @@ public class ItemProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle args = new Bundle();
-                String currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
+                String currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 boolean lesser = currentUserID.compareTo(userId) < 0; //need chatID that is same if currentUserID and userId are swapped. So always put "lesser" id first.
                 String chatID = lesser ? currentUserID + userId : userId + currentUserID; //this is how the chatID is defined; not safe since userId might not be defined yet
                 args.putString("chatID", chatID);
+                args.putString("name", userName);
                 Fragment chatFragment = new ChatFragment();
                 chatFragment.setArguments(args);
                 getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10sp"
-    android:elevation="6sp"
+    android:layout_margin="10dp"
+    android:elevation="6dp"
     android:background="@drawable/rounded_rectangle"
     app:layout_constraintDimensionRatio="1.0">
 
