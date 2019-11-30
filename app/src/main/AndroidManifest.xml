@@ -53,6 +53,10 @@
             </intent-filter>
         </activity>
 
+        <provider
+            android:authorities="com.riceandbeansand.lentals.SearchSuggestionProvider"
+            android:name=".SearchSuggestionProvider" />
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

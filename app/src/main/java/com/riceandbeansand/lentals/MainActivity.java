@@ -20,6 +20,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -165,6 +166,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE);
+        suggestions.saveRecentQuery(query, null);
         Bundle args = new Bundle();
         args.putString("queryType", "searchItems");
         args.putString("userId", pgUserId);
