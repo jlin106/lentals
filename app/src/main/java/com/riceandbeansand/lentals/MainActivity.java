@@ -20,14 +20,13 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.SearchRecentSuggestions;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ListingsFragment.OnDataPass, SearchView.OnQueryTextListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ListingsFragment.OnDataPass {
 
     private Fragment mainListingsFragment;
     private FirebaseAuth mAuth;
@@ -140,6 +139,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    @Override
+    public void startActivity(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Bundle args = new Bundle();
+            args.putString("queryType", "searchItems");
+            args.putString("userId", pgUserId);
+            args.putString("searchQuery", query);
+            Fragment searchListings = new ListingsFragment();
+            searchListings.setArguments(args);
+            getSupportFragmentManager().beginTransaction().addToBackStack(null)
+                    .replace(R.id.fragment_container, searchListings).commit();
+        }
+    }
+
     private void logout() {
         mAuth.signOut();
         LoginManager.getInstance().logOut();
@@ -159,31 +173,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SearchView searchView = (SearchView) menu.findItem(R.id.options_menu_main_search).getActionView();
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setOnQueryTextListener(this);
+//        searchView.setOnQueryTextListener(this);
 
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-                SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE);
-        suggestions.saveRecentQuery(query, null);
-        Bundle args = new Bundle();
-        args.putString("queryType", "searchItems");
-        args.putString("userId", pgUserId);
-        args.putString("searchQuery", query);
-        Fragment searchListings = new ListingsFragment();
-        searchListings.setArguments(args);
-        getSupportFragmentManager().beginTransaction().addToBackStack(null)
-                .replace(R.id.fragment_container, searchListings).commit();
-
-        return true; // we start the search activity manually
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
-    }
+//    @Override
+//    public boolean onQueryTextSubmit(String query) {
+//        Intent searchIntent = new Intent(this, SearchableActivity.class);
+//        searchIntent.putExtra(SearchManager.QUERY, query);
+//
+//        Bundle appData = new Bundle();
+//        appData.putString(SearchableActivity.JARGON, pgUserId); // put extra data to Bundle
+//        searchIntent.putExtra(SearchManager.APP_DATA, appData); // pass the search context data
+//        searchIntent.setAction(Intent.ACTION_SEARCH);
+//
+//        startActivity(searchIntent);
+//
+//        Bundle args = new Bundle();
+//        args.putString("queryType", "searchItems");
+//        args.putString("userId", pgUserId);
+//        args.putString("searchQuery", query);
+//        Fragment searchListings = new ListingsFragment();
+//        searchListings.setArguments(args);
+//        getSupportFragmentManager().beginTransaction().addToBackStack(null)
+//                .replace(R.id.fragment_container, searchListings).commit();
+//
+//        return true; // we start the search activity manually
+//    }
+//
+//    @Override
+//    public boolean onQueryTextChange(String newText) {
+//        return false;
+//    }
 
 }
