@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 
 import com.facebook.login.widget.ProfilePictureView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class UserProfileFragment extends Fragment {
     private String name;
@@ -26,7 +25,7 @@ public class UserProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.user_profile, container, false);
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("User Profile");
+        mAuth = FirebaseAuth.getInstance();
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -48,7 +47,7 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle args = new Bundle();
-                String currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                String currentUserID = mAuth.getCurrentUser().getUid();
                 boolean lesser = currentUserID.compareTo(userId) < 0;
                 String chatID = lesser ? currentUserID + userId : userId + currentUserID;
                 args.putString("chatID", chatID);

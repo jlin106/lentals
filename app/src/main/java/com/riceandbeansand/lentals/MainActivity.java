@@ -16,21 +16,31 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ListingsFragment.OnDataPass, SearchView.OnQueryTextListener {
 
     private Fragment mainListingsFragment;
     private FirebaseAuth mAuth;
     private boolean loggedIn = false; //this should be set in the Firebase db, here temporarily
     private FragmentTransaction transaction;
+    ListingsFragment.OnDataPass dataPasser;
     String userName = "JOHN DOE"; //default user name
     String uid = "";
+    String pgUserId = null;
 
+    @Override
+    public void onDataPass(String pgUserId) {
+        this.pgUserId = pgUserId;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.toMyItems) {
             Bundle args = new Bundle();
             args.putString("queryType", "userItems");
+            args.putString("userId", mAuth.getCurrentUser().getUid());
             mainListingsFragment = new ListingsFragment();
             mainListingsFragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
@@ -129,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void logout() {
-        FirebaseAuth.getInstance().signOut();
+        mAuth.signOut();
         LoginManager.getInstance().logOut();
 
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -137,5 +148,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.action_bar_menu, menu);
+
+        // Add SearchWidget.
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.options_menu_main_search).getActionView();
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(this);
+
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Bundle args = new Bundle();
+        args.putString("queryType", "searchItems");
+        args.putString("userId", pgUserId);
+        args.putString("searchQuery", query);
+        Fragment searchListings = new ListingsFragment();
+        searchListings.setArguments(args);
+        getSupportFragmentManager().beginTransaction().addToBackStack(null)
+                .replace(R.id.fragment_container, searchListings).commit();
+
+        return true; // we start the search activity manually
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
 
 }
