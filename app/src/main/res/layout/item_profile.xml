@@ -15,7 +15,8 @@
             android:id="@+id/constraintLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/outgoing_chat_rounded_rectangle"
+            android:elevation="4dp"
             app:layout_constraintBottom_toTopOf="@id/constraintLayout3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -133,13 +134,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="4dp"
                     android:layout_marginVertical="2dp"
-                    android:background="@drawable/com_facebook_button_background"
+                    android:background="@drawable/outgoing_chat_rounded_rectangle"
                     android:fontFamily="@font/montserrat"
                     android:text="Message"
-                    android:textColor="#FFFFFFFF"
+                    android:textColor="@color/common_google_signin_btn_text_light"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@id/profilePictureContainer"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

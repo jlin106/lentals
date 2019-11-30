@@ -68,10 +68,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:background="@drawable/com_facebook_button_background"
+                android:background="@drawable/outgoing_chat_rounded_rectangle"
                 android:fontFamily="@font/montserrat"
                 android:text="Message"
-                android:textColor="#FFFFFFFF"
+                android:textColor="@color/common_google_signin_btn_text_light"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
