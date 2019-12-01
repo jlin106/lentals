@@ -4,6 +4,7 @@
     <color name="colorAccent">#97FFEB3B</color>
     <color name="colorAccentDark">#FFC107</color>
     <color name="black">#000000</color>
+    <color name="grey">#F7F2F2</color>
     <color name="white">#FFFFFF</color>
-    <color name="red">#FF0000</color>
+    <color name="red">#BEF44336</color>
 </resources>

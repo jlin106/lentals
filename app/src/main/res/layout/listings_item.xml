@@ -27,7 +27,7 @@
             android:id="@+id/listingsItemNameCard"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="#F7F2F2"
+            android:background="@color/grey"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:layout_editor_absoluteX="0dp">
 

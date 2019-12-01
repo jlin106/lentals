@@ -62,10 +62,13 @@ public class AddItemFragment extends Fragment {
         final ImageView imageView = (ImageView) view.findViewById(R.id.imageHolder);
         final Button chooseImageBtn = view.findViewById(R.id.chooseImageBtn);
         final Button postItem = view.findViewById(R.id.postBtn);
+        final Button cancelItem = view.findViewById(R.id.noPostBtn);
+        final Button deleteItem = view.findViewById(R.id.deleteItemBtn);
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             isNew = false;
+            deleteItem.setVisibility(View.VISIBLE);
             postItem.setText("Update!");
             itemID = bundle.getString("itemID", "");
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Update Item");
@@ -185,13 +188,30 @@ public class AddItemFragment extends Fragment {
             }
         });
 
-        final Button cancelItem = view.findViewById(R.id.noPostBtn);
         cancelItem.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().popBackStack();;
             }
         });
 
+        deleteItem.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                db.collection("items").document(itemID).delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("App", "DocumentSnapshot successfully deleted!");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("App", "Error deleting document", e);
+                            }
+                        });
+                getActivity().getSupportFragmentManager().popBackStack();;
+            }
+        });
         return view;
     }
 

@@ -127,11 +127,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:background="#BEF44336"
+        android:background="@color/grey"
         android:fontFamily="@font/montserrat"
         android:text="CANCEL"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/deleteItemBtn"
         app:layout_constraintEnd_toStartOf="@+id/postBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
@@ -146,9 +146,23 @@
         android:text="POST"
         android:textSize="18sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/noPostBtn"
-        app:layout_constraintBottom_toBottomOf="@+id/noPostBtn"
+        app:layout_constraintBottom_toTopOf="@+id/deleteItemBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/noPostBtn"
         app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
+
+    <Button
+        android:id="@+id/deleteItemBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/red"
+        android:fontFamily="@font/montserrat"
+        android:text="DELETE ITEM"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/postBtn"
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
