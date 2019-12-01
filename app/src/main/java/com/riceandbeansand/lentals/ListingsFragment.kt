@@ -101,6 +101,11 @@ class ListingsFragment : Fragment() {
                     val username = "@" + model.userName.toLowerCase().replace(" ", "")
                     holder.view.findViewById<TextView>(R.id.userName).text = username
                 }
+                if (!model.visible) {
+                    holder.view.findViewById<TextView>(R.id.name).setTextColor(R.color.red)
+                    holder.view.findViewById<TextView>(R.id.rate).setTextColor(R.color.red)
+                    holder.view.findViewById<TextView>(R.id.userName).setTextColor(R.color.red)
+                }
                 holder.view.findViewById<TextView>(R.id.name).setText(model.name)
                 holder.view.findViewById<TextView>(R.id.rate).setText(money_format.format(model.price));
 
