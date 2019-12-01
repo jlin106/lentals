@@ -13,10 +13,12 @@ import androidx.fragment.app.Fragment;
 
 import com.facebook.login.widget.ProfilePictureView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class UserProfileFragment extends Fragment {
     private String name;
     private String userId;
+    String currentUserID;
     private String profileId;
     private FirebaseAuth mAuth;
 
@@ -26,6 +28,7 @@ public class UserProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.user_profile, container, false);
         mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getCurrentUser().getUid();
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -42,9 +45,9 @@ public class UserProfileFragment extends Fragment {
         final ProfilePictureView profilePictureView = (ProfilePictureView) view.findViewById(R.id.userProfilePic);
 
         userNameView.setText(name);
-        messageBtn.setText("Message");
         profilePictureView.setProfileId(profileId);
 
+        messageBtn.setText("Message");
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +63,10 @@ public class UserProfileFragment extends Fragment {
                         .replace(R.id.fragment_container, chatFragment).commit();
             }
         });
+
+        if(currentUserID.equals(userId)) {
+            messageBtn.setVisibility(View.GONE);
+        }
 
         Bundle args = new Bundle();
         args.putString("queryType", "userItems");
