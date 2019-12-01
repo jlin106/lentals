@@ -41,6 +41,7 @@ public class ItemProfileFragment extends Fragment {
     private String userName;
     private String descrip;
     private String userId;
+    private String currentUserID;
     private String profileId;
 
     @Override
@@ -54,6 +55,9 @@ public class ItemProfileFragment extends Fragment {
         if (bundle != null) {
             itemID = bundle.getString("itemID", "");
         }
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getCurrentUser().getUid();
 
         final TextView nameIP = (TextView) view.findViewById(R.id.name_ip);
         final TextView rateIP = (TextView) view.findViewById(R.id.rate_ip);
@@ -80,6 +84,10 @@ public class ItemProfileFragment extends Fragment {
                         descrip = document.getString("descrip");
                         userId = document.getString("userID");
                         profileId = document.getString("profileID");
+
+                        if (currentUserID.equals(userId)) {
+                            messageBtn.setVisibility(View.GONE);
+                        }
 
                         nameIP.setText(name);
                         rateIP.setText(money_format.format(price));
