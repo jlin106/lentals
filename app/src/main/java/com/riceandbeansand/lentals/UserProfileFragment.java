@@ -37,12 +37,14 @@ public class UserProfileFragment extends Fragment {
         Log.d("Tag", "Profile ID: " + profileId);
 
         view.findViewById(R.id.profilePictureContainer).setClipToOutline(true);
-        TextView userNameView = (TextView) view.findViewById(R.id.userName);
+        final TextView userNameView = (TextView) view.findViewById(R.id.userName);
+        final Button messageBtn = (Button) view.findViewById(R.id.message_btn);
+        final ProfilePictureView profilePictureView = (ProfilePictureView) view.findViewById(R.id.userProfilePic);
+
         userNameView.setText(name);
-        ProfilePictureView profilePictureView = (ProfilePictureView) view.findViewById(R.id.userProfilePic);
+        messageBtn.setText("Message");
         profilePictureView.setProfileId(profileId);
 
-        final Button messageBtn = (Button) view.findViewById(R.id.message_btn);
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

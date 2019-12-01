@@ -61,6 +61,7 @@ public class ItemProfileFragment extends Fragment {
         final TextView userNameIP = (TextView) view.findViewById(R.id.userName_ip);
         final ImageView imageIP = (ImageView) view.findViewById(R.id.imageView_ip);
         view.findViewById(R.id.profilePictureContainer).setClipToOutline(true);
+        final Button messageBtn = (Button) view.findViewById(R.id.message_btn);
         final ProfilePictureView profilePictureIP = (ProfilePictureView) view.findViewById(R.id.userProfilePic_ip);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -84,6 +85,7 @@ public class ItemProfileFragment extends Fragment {
                         rateIP.setText(money_format.format(price));
                         descripIP.setText(descrip);
                         userNameIP.setText(userName);
+                        messageBtn.setText("Message");
                         profilePictureIP.setProfileId(profileId);
 
                         byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
@@ -109,7 +111,6 @@ public class ItemProfileFragment extends Fragment {
             }
         });
 
-        final Button messageBtn = (Button) view.findViewById(R.id.message_btn);
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

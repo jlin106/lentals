@@ -23,7 +23,6 @@
             android:layout_height="wrap_content"
             android:background="@drawable/incoming_chat_rounded_rectangle"
             android:padding="6dp"
-            android:text="TextView"
             android:textSize="16dp" />
 
     </LinearLayout>
