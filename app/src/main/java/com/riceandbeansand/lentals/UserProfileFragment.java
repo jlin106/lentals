@@ -44,7 +44,7 @@ public class UserProfileFragment extends Fragment {
         final Button messageBtn = (Button) view.findViewById(R.id.message_btn);
         final ProfilePictureView profilePictureView = (ProfilePictureView) view.findViewById(R.id.userProfilePic);
 
-        userNameView.setText(name);
+        userNameView.setText("\n"+name);
         profilePictureView.setProfileId(profileId);
 
         messageBtn.setText("Message");
@@ -66,6 +66,7 @@ public class UserProfileFragment extends Fragment {
 
         if(currentUserID.equals(userId)) {
             messageBtn.setVisibility(View.GONE);
+            userNameView.setText(name+"\n(your profile)");
         }
 
         Bundle args = new Bundle();
