@@ -16,6 +16,7 @@ public class ListingsItemSchema {
     public String userID;
     public String profileID;
     public String descrip;
+    public boolean visible;
 
     // Needed for Firebase
     public void constructor() {

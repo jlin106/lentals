@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.toMyItems) {
             Bundle args = new Bundle();
-            args.putString("queryType", "userItems");
+            args.putString("queryType", "myItems");
             args.putString("userId", mAuth.getCurrentUser().getUid());
             mainListingsFragment = new ListingsFragment();
             mainListingsFragment.setArguments(args);

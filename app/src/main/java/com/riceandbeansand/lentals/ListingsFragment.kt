@@ -52,20 +52,29 @@ class ListingsFragment : Fragment() {
         val userId = arguments?.getString("userId")
         val searchQuery = arguments?.getString("searchQuery", "")
         var query = db.collection("items").orderBy("name")
+        var isCurrentUser = false
+        if (userId.equals(actualUserId)) {
+            isCurrentUser = true
+        }
 
         if (queryString == "mainItems") {
             passData(null)
-            query = db.collection("items").orderBy("name")
+            query = db.collection("items").orderBy("name").whereEqualTo("visible", true)
             (activity as AppCompatActivity).supportActionBar!!.title = "Main Listings"
         }
         else if (queryString == "userItems") {
             passData(userId)
-            query = db.collection("items").orderBy("name").whereEqualTo("userID", userId)
             (activity as AppCompatActivity).supportActionBar!!.title = "Profile"
+            query = db.collection("items").orderBy("name").whereEqualTo("visible", true).whereEqualTo("userID", userId)
+        }
+        else if (queryString == "myItems") {
+            passData(userId)
+            (activity as AppCompatActivity).supportActionBar!!.title = "My Items"
+            query = db.collection("items").orderBy("name").whereEqualTo("userID", userId)
         }
         else if (queryString == "searchItems") {
             query = if (userId == null) db.collection("items").orderBy("name").startAt(searchQuery).endAt(searchQuery + "\uf8ff")
-            else db.collection("items").orderBy("name").whereEqualTo("userID", userId).startAt(searchQuery).endAt(searchQuery + "\uf8ff")
+            else db.collection("items").orderBy("name").whereEqualTo("visible", true).whereEqualTo("userID", userId).startAt(searchQuery).endAt(searchQuery + "\uf8ff")
         }
 
         val options = FirestoreRecyclerOptions.Builder<ListingsItemSchema>()
@@ -96,13 +105,22 @@ class ListingsFragment : Fragment() {
                 holder.view.findViewById<TextView>(R.id.rate).setText(money_format.format(model.price));
 
                 holder.view.setOnClickListener(View.OnClickListener {
-                    val itemProfile = ItemProfileFragment()
-                    val args = Bundle()
-                    args.putString("itemID", model.uid)
-                    itemProfile.arguments = args
-
-                    activity!!.supportFragmentManager.beginTransaction().addToBackStack(null)
-                            .replace(R.id.fragment_container, itemProfile).commit()
+                    if (queryString == "myItems") {
+                        // If it is your items, allow user to edit
+                        val updateItem = AddItemFragment()
+                        val args = Bundle()
+                        args.putString("itemID", model.uid)
+                        updateItem.arguments = args
+                        activity!!.supportFragmentManager.beginTransaction().addToBackStack(null)
+                                .replace(R.id.fragment_container, updateItem).commit()
+                    } else {
+                        val itemProfile = ItemProfileFragment()
+                        val args = Bundle()
+                        args.putString("itemID", model.uid)
+                        itemProfile.arguments = args
+                        activity!!.supportFragmentManager.beginTransaction().addToBackStack(null)
+                                .replace(R.id.fragment_container, itemProfile).commit()
+                    }
                 })
             }
         }
@@ -118,7 +136,7 @@ class ListingsFragment : Fragment() {
                     .replace(R.id.fragment_container, AddItemFragment()).commit()
         })
 
-        if (queryString == "userItems" && !userId.equals(actualUserId)) {
+        if (queryString == "userItems" && !isCurrentUser) {
             fab.visibility=View.INVISIBLE
         }
 
