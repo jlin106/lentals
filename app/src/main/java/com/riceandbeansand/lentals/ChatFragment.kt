@@ -80,6 +80,9 @@ class ChatFragment: Fragment() {
         view.findViewById<Button>(R.id.sendButton).setOnClickListener(View.OnClickListener {
             val messageTextView = view.findViewById<EditText>(R.id.messageText)
             val message = messageTextView.text.toString()
+            if (message == "") {
+                return@OnClickListener
+            }
             messageTextView.setText("")
             val currentTime = System.currentTimeMillis()
 
