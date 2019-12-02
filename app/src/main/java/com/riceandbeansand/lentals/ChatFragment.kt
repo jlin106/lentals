@@ -33,9 +33,13 @@ class ChatFragment: Fragment() {
         (activity as AppCompatActivity).supportActionBar!!.title = arguments?.getString("name", "UNKNOWN")
 
         val view = inflater.inflate(R.layout.chat, container, false)
-        view.findViewById<Button>(R.id.sendButton).setOnClickListener(View.OnClickListener {
+        view.findViewById<Button>(R.id.sendButton).setOnClickListener{ _ ->
             val messageTextView = view.findViewById<EditText>(R.id.messageText)
             val message = messageTextView.text.toString()
+
+            if (message == "") {
+               return@setOnClickListener
+            }
             Log.d("app", "message is " + message)
             val currentTime = System.currentTimeMillis()
 
@@ -48,7 +52,7 @@ class ChatFragment: Fragment() {
                     .document().set(docData)
                     .addOnSuccessListener { messageTextView.setText("")}
                     .addOnFailureListener { e -> Log.w("App", "Error writing chat msg", e)  }
-        })
+        }
 
         val options = FirestoreRecyclerOptions.Builder<ChatItemSchema>()
                 .setQuery(query, ChatItemSchema::class.java)
