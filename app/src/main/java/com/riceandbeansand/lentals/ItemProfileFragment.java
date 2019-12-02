@@ -108,14 +108,25 @@ public class ItemProfileFragment extends Fragment {
         profilePictureIP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle args = new Bundle();
-                args.putString("name", userName);
-                args.putString("userId", userId);
-                args.putString("profileId", profileId);
-                Fragment userProfile = new UserProfileFragment(); // userProfile fragment
-                userProfile.setArguments(args);
-                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)
-                        .replace(R.id.fragment_container, userProfile).commit();
+                if (currentUserID.equals(userId)) {
+                    Bundle args = new Bundle();
+                    args.putString("queryType", "myItems");
+                    args.putString("userId", currentUserID);
+                    Fragment myProfile = new ListingsFragment();
+                    myProfile.setArguments(args);
+                    getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)
+                            .replace(R.id.fragment_container, myProfile).commit();
+                }
+                else {
+                    Bundle args = new Bundle();
+                    args.putString("name", userName);
+                    args.putString("userId", userId);
+                    args.putString("profileId", profileId);
+                    Fragment userProfile = new UserProfileFragment(); // userProfile fragment
+                    userProfile.setArguments(args);
+                    getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)
+                            .replace(R.id.fragment_container, userProfile).commit();
+                }
             }
         });
 
@@ -123,7 +134,6 @@ public class ItemProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle args = new Bundle();
-                String currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 boolean lesser = currentUserID.compareTo(userId) < 0; //need chatID that is same if currentUserID and userId are swapped. So always put "lesser" id first.
                 String chatID = lesser ? currentUserID + userId : userId + currentUserID; //this is how the chatID is defined; not safe since userId might not be defined yet
                 args.putString("chatID", chatID);

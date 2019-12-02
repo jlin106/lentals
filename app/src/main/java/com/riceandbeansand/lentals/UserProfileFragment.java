@@ -52,7 +52,6 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle args = new Bundle();
-                String currentUserID = mAuth.getCurrentUser().getUid();
                 boolean lesser = currentUserID.compareTo(userId) < 0;
                 String chatID = lesser ? currentUserID + userId : userId + currentUserID;
                 args.putString("chatID", chatID);
@@ -66,7 +65,6 @@ public class UserProfileFragment extends Fragment {
 
         if(currentUserID.equals(userId)) {
             messageBtn.setVisibility(View.GONE);
-            userNameView.setText(name+"\n(your profile)");
         }
 
         Bundle args = new Bundle();
