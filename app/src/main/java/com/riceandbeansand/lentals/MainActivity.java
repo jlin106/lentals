@@ -16,25 +16,63 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
+import android.util.Base64;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ListingsFragment.OnDataPass {
 
     private Fragment mainListingsFragment;
     private FirebaseAuth mAuth;
     private boolean loggedIn = false; //this should be set in the Firebase db, here temporarily
     private FragmentTransaction transaction;
+    ListingsFragment.OnDataPass dataPasser;
     String userName = "JOHN DOE"; //default user name
     String uid = "";
+    String pgUserId = null;
 
+    @Override
+    public void onDataPass(String pgUserId) {
+        this.pgUserId = pgUserId;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /** get keyhash for fb login.
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.riceandbeansand.lentals",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            Log.d("ERROR:", "NAME NOT FOUND");
+        }
+        catch (NoSuchAlgorithmException e) {
+            Log.d("ERROR:", "NO SUCH ALGORITHMS EXCEPTION");
+        }
+         */
 
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
@@ -107,7 +145,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.toMyItems) {
             Bundle args = new Bundle();
-            args.putString("queryType", "userItems");
+            args.putString("queryType", "myItems");
+            args.putString("userId", mAuth.getCurrentUser().getUid());
             mainListingsFragment = new ListingsFragment();
             mainListingsFragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
@@ -128,14 +167,78 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                    SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE);
+            suggestions.saveRecentQuery(query, null);
+            Bundle args = new Bundle();
+            args.putString("queryType", "searchItems");
+            args.putString("userId", pgUserId);
+            args.putString("searchQuery", query);
+            Fragment searchListings = new ListingsFragment();
+            searchListings.setArguments(args);
+            getSupportFragmentManager().beginTransaction().addToBackStack(null)
+                    .replace(R.id.fragment_container, searchListings).commit();
+        }
+    }
+
     private void logout() {
-        FirebaseAuth.getInstance().signOut();
+        mAuth.signOut();
         LoginManager.getInstance().logOut();
 
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+        finish();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.action_bar_menu, menu);
+
+        // Add SearchWidget.
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.options_menu_main_search).getActionView();
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//        searchView.setOnQueryTextListener(this);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+//    @Override
+//    public boolean onQueryTextSubmit(String query) {
+//        Intent searchIntent = new Intent(this, SearchableActivity.class);
+//        searchIntent.putExtra(SearchManager.QUERY, query);
+//
+//        Bundle appData = new Bundle();
+//        appData.putString(SearchableActivity.JARGON, pgUserId); // put extra data to Bundle
+//        searchIntent.putExtra(SearchManager.APP_DATA, appData); // pass the search context data
+//        searchIntent.setAction(Intent.ACTION_SEARCH);
+//
+//        startActivity(searchIntent);
+//
+//        Bundle args = new Bundle();
+//        args.putString("queryType", "searchItems");
+//        args.putString("userId", pgUserId);
+//        args.putString("searchQuery", query);
+//        Fragment searchListings = new ListingsFragment();
+//        searchListings.setArguments(args);
+//        getSupportFragmentManager().beginTransaction().addToBackStack(null)
+//                .replace(R.id.fragment_container, searchListings).commit();
+//
+//        return true; // we start the search activity manually
+//    }
+//
+//    @Override
+//    public boolean onQueryTextChange(String newText) {
+//        return false;
+//    }
 
 }

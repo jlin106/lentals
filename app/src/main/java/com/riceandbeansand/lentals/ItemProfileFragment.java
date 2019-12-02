@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 
 import com.facebook.login.widget.ProfilePictureView;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,6 +41,7 @@ public class ItemProfileFragment extends Fragment {
     private String userName;
     private String descrip;
     private String userId;
+    private String currentUserID;
     private String profileId;
 
     @Override
@@ -54,12 +56,16 @@ public class ItemProfileFragment extends Fragment {
             itemID = bundle.getString("itemID", "");
         }
 
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getCurrentUser().getUid();
+
         final TextView nameIP = (TextView) view.findViewById(R.id.name_ip);
         final TextView rateIP = (TextView) view.findViewById(R.id.rate_ip);
         final TextView descripIP = (TextView) view.findViewById(R.id.descrip_ip);
         final TextView userNameIP = (TextView) view.findViewById(R.id.userName_ip);
         final ImageView imageIP = (ImageView) view.findViewById(R.id.imageView_ip);
         view.findViewById(R.id.profilePictureContainer).setClipToOutline(true);
+        final Button messageBtn = (Button) view.findViewById(R.id.message_btn);
         final ProfilePictureView profilePictureIP = (ProfilePictureView) view.findViewById(R.id.userProfilePic_ip);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -79,10 +85,15 @@ public class ItemProfileFragment extends Fragment {
                         userId = document.getString("userID");
                         profileId = document.getString("profileID");
 
+                        if (currentUserID.equals(userId)) {
+                            messageBtn.setVisibility(View.GONE);
+                        }
+
                         nameIP.setText(name);
                         rateIP.setText(money_format.format(price));
                         descripIP.setText(descrip);
                         userNameIP.setText(userName);
+                        messageBtn.setText("Message");
                         profilePictureIP.setProfileId(profileId);
 
                         byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
@@ -97,21 +108,43 @@ public class ItemProfileFragment extends Fragment {
         profilePictureIP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle args = new Bundle();
-                args.putString("name", userName);
-                args.putString("userId", userId);
-                args.putString("profileId", profileId);
-                Fragment userProfile = new UserProfileFragment(); // userProfile fragment
-                userProfile.setArguments(args);
-                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)
-                        .replace(R.id.fragment_container, userProfile).commit();
+                if (currentUserID.equals(userId)) {
+                    Bundle args = new Bundle();
+                    args.putString("queryType", "myItems");
+                    args.putString("userId", currentUserID);
+                    Fragment myProfile = new ListingsFragment();
+                    myProfile.setArguments(args);
+                    getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)
+                            .replace(R.id.fragment_container, myProfile).commit();
+                }
+                else {
+                    Bundle args = new Bundle();
+                    args.putString("name", userName);
+                    args.putString("userId", userId);
+                    args.putString("profileId", profileId);
+                    Fragment userProfile = new UserProfileFragment(); // userProfile fragment
+                    userProfile.setArguments(args);
+                    getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)
+                            .replace(R.id.fragment_container, userProfile).commit();
+                }
             }
         });
 
-        final Button messageBtn = (Button) view.findViewById(R.id.message_btn);
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle args = new Bundle();
+                boolean lesser = currentUserID.compareTo(userId) < 0; //need chatID that is same if currentUserID and userId are swapped. So always put "lesser" id first.
+                String chatID = lesser ? currentUserID + userId : userId + currentUserID; //this is how the chatID is defined; not safe since userId might not be defined yet
+                args.putString("chatID", chatID);
+                args.putString("name", userName);
+                Fragment chatFragment = new ChatFragment();
+                chatFragment.setArguments(args);
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)
+                        .replace(R.id.fragment_container, chatFragment).commit();
+
+                //Voiding below for now
+                /*
                 boolean isFBInstalled = isAppInstalled("com.facebook.orca");
 
                 if (!isFBInstalled) {
@@ -132,7 +165,7 @@ public class ItemProfileFragment extends Fragment {
                                 "Sorry! Can't open Facebook messenger right now. Please try again later.",
                                 Toast.LENGTH_SHORT).show();
                     }
-                }
+                }*/
             }
         });
 

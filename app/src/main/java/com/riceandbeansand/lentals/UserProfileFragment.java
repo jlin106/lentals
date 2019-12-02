@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class UserProfileFragment extends Fragment {
     private String name;
     private String userId;
+    String currentUserID;
     private String profileId;
     private FirebaseAuth mAuth;
 
@@ -25,7 +27,8 @@ public class UserProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.user_profile, container, false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("User Profile");
+        mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getCurrentUser().getUid();
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -37,10 +40,32 @@ public class UserProfileFragment extends Fragment {
         Log.d("Tag", "Profile ID: " + profileId);
 
         view.findViewById(R.id.profilePictureContainer).setClipToOutline(true);
-        TextView userNameView = (TextView) view.findViewById(R.id.userName);
+        final TextView userNameView = (TextView) view.findViewById(R.id.userName);
+        final Button messageBtn = (Button) view.findViewById(R.id.message_btn);
+        final ProfilePictureView profilePictureView = (ProfilePictureView) view.findViewById(R.id.userProfilePic);
+
         userNameView.setText(name);
-        ProfilePictureView profilePictureView = (ProfilePictureView) view.findViewById(R.id.userProfilePic);
         profilePictureView.setProfileId(profileId);
+
+        messageBtn.setText("Message");
+        messageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle args = new Bundle();
+                boolean lesser = currentUserID.compareTo(userId) < 0;
+                String chatID = lesser ? currentUserID + userId : userId + currentUserID;
+                args.putString("chatID", chatID);
+                args.putString("name", name);
+                Fragment chatFragment = new ChatFragment();
+                chatFragment.setArguments(args);
+                getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)
+                        .replace(R.id.fragment_container, chatFragment).commit();
+            }
+        });
+
+        if(currentUserID.equals(userId)) {
+            messageBtn.setVisibility(View.GONE);
+        }
 
         Bundle args = new Bundle();
         args.putString("queryType", "userItems");
