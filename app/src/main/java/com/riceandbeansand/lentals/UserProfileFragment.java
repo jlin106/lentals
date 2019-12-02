@@ -44,7 +44,7 @@ public class UserProfileFragment extends Fragment {
         final Button messageBtn = (Button) view.findViewById(R.id.message_btn);
         final ProfilePictureView profilePictureView = (ProfilePictureView) view.findViewById(R.id.userProfilePic);
 
-        userNameView.setText("\n"+name);
+        userNameView.setText(name);
         profilePictureView.setProfileId(profileId);
 
         messageBtn.setText("Message");
