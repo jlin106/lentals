@@ -32,7 +32,13 @@ import androidx.fragment.app.Fragment;
 
 public class AddItemFragment extends Fragment {
 
-    final int GALLERY_REQUEST_CODE = 0;
+    private static final int GALLERY_REQUEST_CODE = 0;
+    private static final int RESULT_LOAD_IMAGE = 1;
+
+    //TODO: fix image scaling error
+    //TODO: do map stuff
+    //TODO: Finish Other User Profile Fragment
+    //TODO: make database for users
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,6 +81,7 @@ public class AddItemFragment extends Fragment {
                     Uri imageURI = (Uri) ((ImageView) getView().findViewById(R.id.imageHolder)).getTag();
                     Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageURI);
                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    //i think i need to scale here
                     imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                     byte[] byteArray = outputStream.toByteArray();
                     encodedString = Base64.encodeToString(byteArray, Base64.DEFAULT);
