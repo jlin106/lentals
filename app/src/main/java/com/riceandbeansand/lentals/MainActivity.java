@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStart();
         View navHeader = ((NavigationView) findViewById(R.id.main_nav_view)).getHeaderView(0);
 
-        navHeader.findViewById(R.id.profilePictureContainer).a(true);
+        navHeader.findViewById(R.id.profilePictureContainer).setClipToOutline(true);
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
