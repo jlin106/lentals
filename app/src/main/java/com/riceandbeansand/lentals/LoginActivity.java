@@ -187,6 +187,8 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
+        //TODO: need to wait for this to finish before moving on to main Activity
+        //otherwise first time user won't have an ID pic
         protected void onPostExecute(String[] result) {
             super.onPostExecute(result);
 

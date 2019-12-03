@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import com.facebook.login.widget.ProfilePictureView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class UserProfileFragment extends Fragment {
     private String name;
@@ -39,28 +40,28 @@ public class UserProfileFragment extends Fragment {
         if (bundle != null) {
             name = bundle.getString("name", "UNKNOWN");
             userId = bundle.getString("userId");
-            profileId = bundle.getString("profileId", "");
-            profilePicture = bundle.getString("profilePicture", "");
         }
-
-        Log.d("Tag", "Profile ID: " + profileId);
 
         view.findViewById(R.id.profilePictureContainer).setClipToOutline(true);
         final TextView userNameView = (TextView) view.findViewById(R.id.userName);
         final Button messageBtn = (Button) view.findViewById(R.id.message_btn);
         final ImageView profilePictureView = (ImageView) view.findViewById(R.id.userProfilePic);
 
-        userNameView.setText(name);
-
-        try {
-            if (profilePicture != null && !profilePicture.isEmpty()) {
-                byte[] decodedString = Base64.decode(profilePicture, Base64.DEFAULT);
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                profilePictureView.setImageBitmap(decodedByte);
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userId).get().addOnSuccessListener(doc -> {
+            String profilePicture = doc.getString("picture");
+            try {
+                if (profilePicture != null && !profilePicture.isEmpty()) {
+                    byte[] decodedString = Base64.decode(profilePicture, Base64.DEFAULT);
+                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    profilePictureView.setImageBitmap(decodedByte);
+                }
+            } catch (Exception e) {
+                Log.d("TAG", "Couldn't set user profile picture");
             }
-        } catch (Exception e) {
-            Log.d("TAG", "Couldn't set user profile picture");
-        }
+        });
+
+        userNameView.setText(name);
 
         messageBtn.setText("Message");
         messageBtn.setOnClickListener(new View.OnClickListener() {

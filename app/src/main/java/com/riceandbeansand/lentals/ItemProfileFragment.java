@@ -74,15 +74,15 @@ public class ItemProfileFragment extends Fragment {
             userNameIP.setText(doc.getString("userName"));
             messageBtn.setText("Message");
 
-            String profilePicture = doc.getString("profilePicture");
-            try{
-                Log.d("TAG", "document: " + userId);
-                if (profilePicture != null && !profilePicture.isEmpty()) {
-                    profilePictureIP.setImageBitmap(stringToBitmap(profilePicture));
+            db.collection("users").document(doc.getString("userID")).get().addOnSuccessListener(userDoc -> {
+                String profileString = userDoc.getString("picture");
+                try{
+                    if (profileString != null && !profileString.isEmpty()) {
+                        profilePictureIP.setImageBitmap(stringToBitmap(profileString));
+                    }
+                } catch (Exception e) {
                 }
-            } catch (Exception e) {
-
-            }
+            });
 
             UtilityKt.getImageFileFromGSUrlWithCache(doc.getString("imagePath"), getActivity().getCacheDir(), (File file) -> {
                 Bitmap decodedBytes = BitmapFactory.decodeFile(file.getAbsolutePath());
@@ -104,8 +104,6 @@ public class ItemProfileFragment extends Fragment {
                     Bundle args = new Bundle();
                     args.putString("name", doc.getString("userName"));
                     args.putString("userId", doc.getString("userID"));
-                    args.putString("profileId", doc.getString("profileID"));
-                    args.putString("profilePicture", profilePicture);
                     Fragment userProfile = new UserProfileFragment(); // userProfile fragment
                     userProfile.setArguments(args);
                     Log.d("App", "setting bundle args " + args.toString());

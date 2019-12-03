@@ -281,7 +281,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAuth.signOut();
         LoginManager.getInstance().logOut();
 
-        finishAffinity();
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
