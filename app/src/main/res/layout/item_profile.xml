@@ -89,13 +89,15 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent">
 
-                <com.facebook.login.widget.ProfilePictureView
+                <ImageView
                     android:id="@+id/userProfilePic_ip"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    tools:srcCompat="@tools:sample/avatars"
                     android:layout_gravity="center"
                     tools:layout_editor_absoluteX="8dp"
-                    tools:layout_editor_absoluteY="8dp" />
+                    tools:layout_editor_absoluteY="8dp"/>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout

@@ -25,6 +25,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.facebook.FacebookSdk.getCacheDir
 import com.google.firebase.firestore.FieldValue
+import androidx.core.content.ContextCompat
 
 class ListingsFragment : Fragment() {
     private lateinit var dataPasser: OnDataPass
@@ -122,9 +123,9 @@ class ListingsFragment : Fragment() {
                     holder.view.findViewById<TextView>(R.id.userName).text = username
                 }
                 if (!model.visible) {
-                    holder.view.findViewById<TextView>(R.id.name).setTextColor(R.color.red)
-                    holder.view.findViewById<TextView>(R.id.rate).setTextColor(R.color.red)
-                    holder.view.findViewById<TextView>(R.id.userName).setTextColor(R.color.red)
+                    holder.view.findViewById<TextView>(R.id.name).setTextColor(getResources().getColor(R.color.red))
+                    holder.view.findViewById<TextView>(R.id.rate).setTextColor(getResources().getColor(R.color.red))
+                    holder.view.findViewById<TextView>(R.id.userName).setTextColor(getResources().getColor(R.color.red))
                 }
                 holder.view.findViewById<TextView>(R.id.name).setText(model.name)
                 holder.view.findViewById<TextView>(R.id.rate).setText(money_format.format(model.price));

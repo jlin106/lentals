@@ -60,7 +60,7 @@ public class ItemProfileFragment extends Fragment {
         final ImageView imageIP = (ImageView) view.findViewById(R.id.imageView_ip);
         view.findViewById(R.id.profilePictureContainer).setClipToOutline(true);
         final Button messageBtn = (Button) view.findViewById(R.id.message_btn);
-        final ProfilePictureView profilePictureIP = (ProfilePictureView) view.findViewById(R.id.userProfilePic_ip);
+        final ImageView profilePictureIP = (ImageView) view.findViewById(R.id.userProfilePic_ip);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("items").document(itemID).get().addOnSuccessListener((DocumentSnapshot doc) -> {
@@ -73,7 +73,16 @@ public class ItemProfileFragment extends Fragment {
             descripIP.setText(doc.getString("descrip"));
             userNameIP.setText(doc.getString("userName"));
             messageBtn.setText("Message");
-            profilePictureIP.setProfileId(doc.getString("profileID"));
+
+            String profilePicture = doc.getString("profilePicture");
+            try{
+                Log.d("TAG", "document: " + userId);
+                if (profilePicture != null && !profilePicture.isEmpty()) {
+                    profilePictureIP.setImageBitmap(stringToBitmap(profilePicture));
+                }
+            } catch (Exception e) {
+
+            }
 
             UtilityKt.getImageFileFromGSUrlWithCache(doc.getString("imagePath"), getActivity().getCacheDir(), (File file) -> {
                 Bitmap decodedBytes = BitmapFactory.decodeFile(file.getAbsolutePath());
@@ -96,6 +105,7 @@ public class ItemProfileFragment extends Fragment {
                     args.putString("name", doc.getString("userName"));
                     args.putString("userId", doc.getString("userID"));
                     args.putString("profileId", doc.getString("profileID"));
+                    args.putString("profilePicture", profilePicture);
                     Fragment userProfile = new UserProfileFragment(); // userProfile fragment
                     userProfile.setArguments(args);
                     Log.d("App", "setting bundle args " + args.toString());
@@ -118,6 +128,12 @@ public class ItemProfileFragment extends Fragment {
             });
         });
         return view;
+    }
+
+    private Bitmap stringToBitmap(String encodedImage) {
+        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        return decodedByte;
     }
 
     private boolean isAppInstalled(String uri) {
