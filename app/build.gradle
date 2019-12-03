@@ -20,6 +20,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
 }
 
 repositories {
@@ -45,6 +49,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.libraries.places:places:2.0.0'
+    implementation 'com.google.firebase:firebase-storage:19.1.0'
 
 }
 
