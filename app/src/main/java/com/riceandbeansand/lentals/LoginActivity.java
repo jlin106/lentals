@@ -69,7 +69,6 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             finish();
-            return;
         }
 
         setContentView(R.layout.login_screen);
@@ -131,12 +130,14 @@ public class LoginActivity extends AppCompatActivity {
                                                                 @Override
                                                                 public void onSuccess(Void aVoid) {
                                                                     Log.d("App", "DocumentSnapshot successfully written!");
+                                                                    finish();
                                                                 }
                                                             })
                                                             .addOnFailureListener(new OnFailureListener() {
                                                                 @Override
                                                                 public void onFailure(@NonNull Exception e) {
                                                                     Log.w("App", "Error writing document", e);
+                                                                    finish();
                                                                 }
                                                             });
 
@@ -165,7 +166,6 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             });
                              */
-                            finish();
                         } else {
                             Log.w("App", "signInWithCredential:failure", task.getException());
                         }

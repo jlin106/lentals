@@ -98,6 +98,7 @@ public class ItemProfileFragment extends Fragment {
                         messageBtn.setText("Message");
 
                         try{
+                            Log.d("TAG", "document: " + userId);
                             if (profilePicture != null && !profilePicture.isEmpty()) {
                                 profilePictureIP.setImageBitmap(stringToBitmap(profilePicture));
                             }

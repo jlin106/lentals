@@ -46,7 +46,7 @@ public class AddItemFragment extends Fragment {
     private boolean isNew = true;
     private String itemID;
     private String selectedImage;
-    private String profPicEncodedString; // can't access local var from inner classes
+    private String profileImage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,6 +56,7 @@ public class AddItemFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Add Item");
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final Switch visibleSwitch = (Switch) view.findViewById(R.id.visibilitySwitch);
         final TextView rateView = (TextView) view.findViewById(R.id.rateText);
         final TextView itemNameView = (TextView) view.findViewById(R.id.itemNameText);
@@ -65,6 +66,19 @@ public class AddItemFragment extends Fragment {
         final Button postItem = view.findViewById(R.id.postBtn);
         final Button cancelItem = view.findViewById(R.id.noPostBtn);
         final Button deleteItem = view.findViewById(R.id.deleteItemBtn);
+
+        db.collection("users").document(mAuth.getCurrentUser().getUid()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                profileImage = document.getString("picture");
+                            }
+                        }
+                    }
+                });
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -92,9 +106,13 @@ public class AddItemFragment extends Fragment {
                             descripView.setText(selectedDescrip);
                             visibleSwitch.setChecked(selectedVisible);
 
-                            byte[] decodedString = Base64.decode(selectedImage, Base64.DEFAULT);
-                            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                            imageView.setImageBitmap(decodedByte);
+                            try {
+                                byte[] decodedString = Base64.decode(selectedImage, Base64.DEFAULT);
+                                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                                imageView.setImageBitmap(decodedByte);
+                            } catch (Exception e) {
+
+                            }
                         }
                     }
                 }
@@ -129,6 +147,9 @@ public class AddItemFragment extends Fragment {
 
                 //get image as base64
                 String itemImgEncodedString = selectedImage;
+                String profilePicEncodedString = profileImage;
+
+                final Map<String, Object> docData = new HashMap<>();
 
                 try {
                     Uri imageURI = (Uri) imageView.getTag();
@@ -141,25 +162,11 @@ public class AddItemFragment extends Fragment {
                     Log.d("App", "Failed to encode image " + e);
                 }
 
-                db.collection("users").document(userID).get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        profPicEncodedString = document.getString("picture");
-                                    }
-                                }
-                            }
-                        });
-
                 //Should validate stuff server side
                 if (itemName == "" || itemImgEncodedString == "") {
                     return;
                 }
 
-                Map<String, Object> docData = new HashMap<>();
                 docData.put("name", itemName);
                 docData.put("visible", visible);
                 docData.put("price", price);
@@ -168,7 +175,7 @@ public class AddItemFragment extends Fragment {
                 docData.put("image", itemImgEncodedString);
                 docData.put("descrip", description);
                 docData.put("profileID", profileId);
-                docData.put("profilePicture", profPicEncodedString);
+                docData.put("profilePicture", profilePicEncodedString);
 
                 if (isNew) {
                     //not secure -- DB permissions are such that people can post under any userID
@@ -176,6 +183,7 @@ public class AddItemFragment extends Fragment {
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
+                                    Log.d("Tag", "profile picture " + docData.get("profilePicture"));
                                     Log.d("App", "New DocumentSnapshot successfully written!");
                                     getActivity().getSupportFragmentManager().popBackStack();;
                                 }
