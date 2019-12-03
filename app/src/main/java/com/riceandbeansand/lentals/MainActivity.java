@@ -28,6 +28,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.SearchManager;
@@ -229,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             args.putString("queryType", "mainItems");
             mainListingsFragment = new ListingsFragment();
             mainListingsFragment.setArguments(args);
+            clearBackstack();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, mainListingsFragment).commit();
 
@@ -238,16 +240,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             args.putString("userId", mAuth.getCurrentUser().getUid());
             mainListingsFragment = new ListingsFragment();
             mainListingsFragment.setArguments(args);
+            clearBackstack();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, mainListingsFragment).commit();
         } else if (id == R.id.toMaps) {
             SupportMapFragment mFragment = SupportMapFragment.newInstance();
             getSupportActionBar().setTitle("Map");
+            clearBackstack();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, mFragment).commit();
             //mFragment.getMapAsync((OnMapReadyCallback) this);
         }
         else if (id == R.id.logOut) {
+            clearBackstack();
             logout();
         }
 
@@ -282,7 +287,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LoginManager.getInstance().logOut();
 
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
@@ -329,5 +333,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //    public boolean onQueryTextChange(String newText) {
 //        return false;
 //    }
+
+    private void clearBackstack() {
+        try {
+            FragmentManager.BackStackEntry entry = getSupportFragmentManager().getBackStackEntryAt(
+                    0);
+            getSupportFragmentManager().popBackStack(entry.getId(),
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            getSupportFragmentManager().executePendingTransactions();
+        } catch (Exception e) {
+            getSupportFragmentManager().popBackStack(null,
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            getSupportFragmentManager().executePendingTransactions();
+        }
+
+    }
 
 }

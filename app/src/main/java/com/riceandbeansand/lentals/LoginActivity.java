@@ -161,6 +161,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
 //     Async inner class
     private class AsyncCaller extends AsyncTask<String, Void, String[]> {
 
