@@ -1,11 +1,11 @@
 package com.riceandbeansand.lentals;
 
 import com.facebook.login.LoginManager;
-import com.facebook.login.widget.ProfilePictureView;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
@@ -16,7 +16,11 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -32,6 +36,8 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.util.Base64;
@@ -39,6 +45,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -46,8 +53,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.List;
-
-import com.google.android.libraries.places.api.Places;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ListingsFragment.OnDataPass {
 
@@ -58,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean loggedIn = false; //this should be set in the Firebase db, here temporarily
     private FragmentTransaction transaction;
     ListingsFragment.OnDataPass dataPasser;
-    String userName = "JOHN DOE"; //default user name
+    String name = "JOHN DOE"; //default user name
     String uid = "";
     String pgUserId = null;
 
@@ -117,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.main_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         /**
         //get map stuff
         String google_api_key = "AIzaSyBEfXjyqr8kFWjigV43vcCevu6EUQH6";
@@ -173,18 +179,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            // Get user name
-            userName = user.getDisplayName();
-            TextView nameLabel = (TextView) navHeader.findViewById(R.id.nameLabel);
-             nameLabel.setText(userName);
+            final TextView nameLabel = (TextView) navHeader.findViewById(R.id.nameLabel);
+            final ImageView profilePictureView = (ImageView) navHeader.findViewById(R.id.userProfilePic);
 
             for (UserInfo profile : user.getProviderData()) {
                 // Get UID specific to the provider
                 uid = profile.getUid();
             }
 
-            ProfilePictureView profilePictureView = (ProfilePictureView) navHeader.findViewById(R.id.userProfilePic);
-            profilePictureView.setProfileId(uid);
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference item = db.collection("users").document(user.getUid());
+            item.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            System.out.println("DOCUMENT EXISTS");
+                            String name = document.getString("name");
+                            String picture = document.getString("picture");
+
+                            nameLabel.setText(name);
+
+                            try {
+                                if (picture != null && !picture.isEmpty()) {
+                                    byte[] decodedString = Base64.decode(picture, Base64.DEFAULT);
+                                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                                    profilePictureView.setImageBitmap(decodedByte);
+                                }
+                            } catch (Exception e) {
+                                Log.d("TAG", "Couldn't set user profile picture");
+                            }
+                        }
+                    }
+                }
+            });
+
+
         }
     }
 

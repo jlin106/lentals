@@ -46,6 +46,7 @@ public class AddItemFragment extends Fragment {
     private boolean isNew = true;
     private String itemID;
     private String selectedImage;
+    private String profPicEncodedString; // can't access local var from inner classes
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,6 +113,7 @@ public class AddItemFragment extends Fragment {
 
         postItem.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 FirebaseUser user = mAuth.getCurrentUser();
                 String userID = user.getUid();
@@ -126,20 +128,34 @@ public class AddItemFragment extends Fragment {
                 }
 
                 //get image as base64
-                String encodedString = selectedImage;
+                String itemImgEncodedString = selectedImage;
+
                 try {
                     Uri imageURI = (Uri) imageView.getTag();
                     Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageURI);
                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                     imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                     byte[] byteArray = outputStream.toByteArray();
-                    encodedString = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    itemImgEncodedString = Base64.encodeToString(byteArray, Base64.DEFAULT);
                 } catch (Exception e) {
                     Log.d("App", "Failed to encode image " + e);
                 }
 
+                db.collection("users").document(userID).get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        profPicEncodedString = document.getString("picture");
+                                    }
+                                }
+                            }
+                        });
+
                 //Should validate stuff server side
-                if (itemName == "" || encodedString == "") {
+                if (itemName == "" || itemImgEncodedString == "") {
                     return;
                 }
 
@@ -149,9 +165,10 @@ public class AddItemFragment extends Fragment {
                 docData.put("price", price);
                 docData.put("userID", userID);
                 docData.put("userName", userName); //should be gotten from userID/uid, but have to create users collection (keyed by uid) manually
-                docData.put("image", encodedString);
+                docData.put("image", itemImgEncodedString);
                 docData.put("descrip", description);
                 docData.put("profileID", profileId);
+                docData.put("profilePicture", profPicEncodedString);
 
                 if (isNew) {
                     //not secure -- DB permissions are such that people can post under any userID

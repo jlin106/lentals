@@ -43,6 +43,7 @@ public class ItemProfileFragment extends Fragment {
     private String userId;
     private String currentUserID;
     private String profileId;
+    private String profilePicture;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,7 +67,7 @@ public class ItemProfileFragment extends Fragment {
         final ImageView imageIP = (ImageView) view.findViewById(R.id.imageView_ip);
         view.findViewById(R.id.profilePictureContainer).setClipToOutline(true);
         final Button messageBtn = (Button) view.findViewById(R.id.message_btn);
-        final ProfilePictureView profilePictureIP = (ProfilePictureView) view.findViewById(R.id.userProfilePic_ip);
+        final ImageView profilePictureIP = (ImageView) view.findViewById(R.id.userProfilePic_ip);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference item = db.collection("items").document(itemID);
@@ -84,6 +85,7 @@ public class ItemProfileFragment extends Fragment {
                         descrip = document.getString("descrip");
                         userId = document.getString("userID");
                         profileId = document.getString("profileID");
+                        profilePicture = document.getString("profilePicture");
 
                         if (currentUserID.equals(userId)) {
                             messageBtn.setVisibility(View.GONE);
@@ -94,11 +96,22 @@ public class ItemProfileFragment extends Fragment {
                         descripIP.setText(descrip);
                         userNameIP.setText(userName);
                         messageBtn.setText("Message");
-                        profilePictureIP.setProfileId(profileId);
 
-                        byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
-                        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                        imageIP.setImageBitmap(decodedByte);
+                        try{
+                            if (profilePicture != null && !profilePicture.isEmpty()) {
+                                profilePictureIP.setImageBitmap(stringToBitmap(profilePicture));
+                            }
+                        } catch (Exception e) {
+
+                        }
+
+                        try {
+                            if (image != null && !image.isEmpty()) {
+                                imageIP.setImageBitmap(stringToBitmap(image));
+                            }
+                        } catch (Exception e) {
+
+                        }
 
                     }
                 }
@@ -122,6 +135,7 @@ public class ItemProfileFragment extends Fragment {
                     args.putString("name", userName);
                     args.putString("userId", userId);
                     args.putString("profileId", profileId);
+                    args.putString("profilePicture", profilePicture);
                     Fragment userProfile = new UserProfileFragment(); // userProfile fragment
                     userProfile.setArguments(args);
                     getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)
@@ -170,6 +184,12 @@ public class ItemProfileFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private Bitmap stringToBitmap(String encodedImage) {
+        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        return decodedByte;
     }
 
     private boolean isAppInstalled(String uri) {
