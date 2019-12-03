@@ -57,13 +57,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // hacky fix for network async
-        int SDK_INT = android.os.Build.VERSION.SDK_INT;
-        if (SDK_INT > 8)
-        {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                    .permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
+//        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+//        if (SDK_INT > 8)
+//        {
+//            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+//                    .permitAll().build();
+//            StrictMode.setThreadPolicy(policy);
+//        }
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -105,42 +105,20 @@ public class LoginActivity extends AppCompatActivity {
                                             Log.v("LoginActivity", response.toString());
 
                                             try {
-                                                String userID = mAuth.getCurrentUser().getUid();
-                                                String name = object.getString("name");
-                                                String email = object.getString("email");
-                                                String profilePicUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
-
-                                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                                final String userID = mAuth.getCurrentUser().getUid();
+                                                final String name = object.getString("name");
+                                                final String email = object.getString("email");
+                                                final String profilePicUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
 
                                                 try {
-                                                    URL url = new URL(profilePicUrl);
-                                                    Bitmap profilePic = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                                                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                                                    profilePic.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-                                                    byte[] byteArray = outputStream.toByteArray();
-                                                    String profPicEncodedString = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-                                                    Map<String, Object> docData = new HashMap<>();
-                                                    docData.put("name", name);
-                                                    docData.put("email", email);
-                                                    docData.put("picture", profPicEncodedString);
-
-                                                    db.collection("users").document(userID).set(docData)
-                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                @Override
-                                                                public void onSuccess(Void aVoid) {
-                                                                    Log.d("App", "DocumentSnapshot successfully written!");
-                                                                    finish();
-                                                                }
-                                                            })
-                                                            .addOnFailureListener(new OnFailureListener() {
-                                                                @Override
-                                                                public void onFailure(@NonNull Exception e) {
-                                                                    Log.w("App", "Error writing document", e);
-                                                                    finish();
-                                                                }
-                                                            });
-
+                                                    // Async call
+                                                    Handler handler = new Handler();
+                                                    handler.post(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            new AsyncCaller().execute(userID, name, email, profilePicUrl);
+                                                        }
+                                                    });
                                                 }
                                                 catch (Exception e) {
                                                     e.printStackTrace();
@@ -157,15 +135,9 @@ public class LoginActivity extends AppCompatActivity {
                             parameters.putString("fields", "id,name,email,picture.type(large)");
                             request.setParameters(parameters);
                             request.executeAsync();
-                            /** Async call
-                            Handler handler = new Handler();
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    new AsyncCaller().execute();
-                                }
-                            });
-                             */
+
+                            finish();
+
                         } else {
                             Log.w("App", "signInWithCredential:failure", task.getException());
                         }
@@ -189,8 +161,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    /** Async inner class
-    private class AsyncCaller extends AsyncTask<Void, Void, Void> {
+//     Async inner class
+    private class AsyncCaller extends AsyncTask<String, Void, String[]> {
 
         @Override
         protected void onPreExecute() {
@@ -198,74 +170,47 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
-            GraphRequest request = GraphRequest.newMeRequest(
-                    accessToken,
-                    new GraphRequest.GraphJSONObjectCallback() {
-                        @Override
-                        public void onCompleted(JSONObject object, GraphResponse response) {
-                            Log.v("LoginActivity", response.toString());
+        protected String[] doInBackground(String... params) {
+            try {
+                URL url = new URL(params[3]);
+                Bitmap profilePic = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                profilePic.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                byte[] byteArray = outputStream.toByteArray();
+                String profPicEncodedString = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                params[3] = profPicEncodedString;
+                return params;
+            } catch (Exception e) {
 
-                            try {
-                                String userID = mAuth.getCurrentUser().getUid();
-                                String name = object.getString("name");
-                                String email = object.getString("email");
-                                String profilePicUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
-
-                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                                try {
-                                    URL url = new URL(profilePicUrl);
-                                    Bitmap profilePic = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                                    profilePic.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-                                    byte[] byteArray = outputStream.toByteArray();
-                                    String profPicEncodedString = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-                                    Map<String, Object> docData = new HashMap<>();
-                                    docData.put("name", name);
-                                    docData.put("email", email);
-                                    docData.put("picture", profPicEncodedString);
-
-                                    db.collection("users").document(userID).set(docData)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Log.d("App", "DocumentSnapshot successfully written!");
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.w("App", "Error writing document", e);
-                                                }
-                                            });
-
-                                }
-                                catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-                            catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-
-            Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,name,email,picture.type(large)");
-            request.setParameters(parameters);
-            request.executeAsync();
+            }
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(String[] result) {
             super.onPostExecute(result);
+
+            Map<String, Object> docData = new HashMap<>();
+            docData.put("name", result[1]);
+            docData.put("email", result[2]);
+            docData.put("picture", result[3]);
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("users").document(result[0]).set(docData)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("App", "DocumentSnapshot successfully written!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("App", "Error writing document", e);
+                        }
+                    });
         }
 
     }
-     */
 
 }
