@@ -21,6 +21,10 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import android.util.Log
 import android.widget.ImageView
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.facebook.FacebookSdk.getCacheDir
+import com.google.firebase.firestore.FieldValue
 
 class ListingsFragment : Fragment() {
     private lateinit var dataPasser: OnDataPass
@@ -92,10 +96,26 @@ class ListingsFragment : Fragment() {
             }
 
             override fun onBindViewHolder(holder: ViewHolder, position: Int, model: ListingsItemSchema) {
-                if (model.image != null ){
-                    val decodedString = Base64.decode(model.image, Base64.DEFAULT)
-                    val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-                    holder.view.findViewById<ImageView>(R.id.imageView).setImageBitmap(decodedByte)
+                //if (model.image != null ){
+                    // Update old items to new blob system.
+                    //val decodedString = Base64.decode(model.image, Base64.DEFAULT)
+                    //val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+                    //val storage = FirebaseStorage.getInstance();
+                    //val imageKey = "mainImage" + model.uid
+                    //val imageRef = storage.reference.child("images").child(imageKey)
+                    //imageRef.putBytes(decodedString)
+                    //val db  = FirebaseFirestore.getInstance()
+                    //db.collection("items").document(model.uid).update("imagePath", imageRef.toString())
+                    //val updates = hashMapOf<String, Any>(
+                    //        "image" to FieldValue.delete()
+                    //)
+                    //db.collection("items").document(model.uid).update(updates);
+                //}
+                if (model.imagePath != null ) {
+                    val imageFile = getImageFileFromGSUrlWithCache(model.imagePath, activity!!.cacheDir){ File ->
+                        val decodedBytes = BitmapFactory.decodeFile(File.absolutePath)
+                        holder.view.findViewById<ImageView>(R.id.imageView).setImageBitmap(decodedBytes)
+                    }
                 }
                 if (model.userName != null) {
                     val username = "@" + model.userName.toLowerCase().replace(" ", "")

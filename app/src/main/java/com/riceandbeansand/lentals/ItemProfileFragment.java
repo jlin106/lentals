@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import kotlin.Unit;
 
 import com.facebook.login.widget.ProfilePictureView;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,21 +29,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.android.gms.tasks.Task;
 
+import java.io.File;
 import java.text.DecimalFormat;
 
 public class ItemProfileFragment extends Fragment {
 
-    private String itemID;
     private static final String TAG = "DocSnippets";
     DecimalFormat money_format = new DecimalFormat("$0.00");
-    private String name;
-    private double price;
-    private String image;
-    private String userName;
-    private String descrip;
-    private String userId;
-    private String currentUserID;
-    private String profileId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,12 +45,13 @@ public class ItemProfileFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Item Profile");
 
         Bundle bundle = this.getArguments();
+        String itemID = "";
         if (bundle != null) {
             itemID = bundle.getString("itemID", "");
         }
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        currentUserID = mAuth.getCurrentUser().getUid();
+        String currentUserID = mAuth.getCurrentUser().getUid();
 
         final TextView nameIP = (TextView) view.findViewById(R.id.name_ip);
         final TextView rateIP = (TextView) view.findViewById(R.id.rate_ip);
@@ -69,46 +63,26 @@ public class ItemProfileFragment extends Fragment {
         final ProfilePictureView profilePictureIP = (ProfilePictureView) view.findViewById(R.id.userProfilePic_ip);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference item = db.collection("items").document(itemID);
-        item.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        System.out.println("DOCUMENT EXISTS");
-                        name = document.getString("name");
-                        price = document.getDouble("price");
-                        image = document.getString("image");
-                        userName = document.getString("userName");
-                        descrip = document.getString("descrip");
-                        userId = document.getString("userID");
-                        profileId = document.getString("profileID");
-
-                        if (currentUserID.equals(userId)) {
-                            messageBtn.setVisibility(View.GONE);
-                        }
-
-                        nameIP.setText(name);
-                        rateIP.setText(money_format.format(price));
-                        descripIP.setText(descrip);
-                        userNameIP.setText(userName);
-                        messageBtn.setText("Message");
-                        profilePictureIP.setProfileId(profileId);
-
-                        byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
-                        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                        imageIP.setImageBitmap(decodedByte);
-
-                    }
-                }
+        db.collection("items").document(itemID).get().addOnSuccessListener((DocumentSnapshot doc) -> {
+            if (currentUserID.equals(doc.getString("userID"))) {
+                messageBtn.setVisibility(View.GONE);
             }
-        });
 
-        profilePictureIP.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (currentUserID.equals(userId)) {
+            nameIP.setText(doc.getString("name"));
+            rateIP.setText(money_format.format(doc.getDouble("price")));
+            descripIP.setText(doc.getString("descrip"));
+            userNameIP.setText(doc.getString("userName"));
+            messageBtn.setText("Message");
+            profilePictureIP.setProfileId(doc.getString("profileID"));
+
+            UtilityKt.getImageFileFromGSUrlWithCache(doc.getString("imagePath"), getActivity().getCacheDir(), (File file) -> {
+                Bitmap decodedBytes = BitmapFactory.decodeFile(file.getAbsolutePath());
+                imageIP.setImageBitmap(decodedBytes);
+                return Unit.INSTANCE; //required by Java for kotlin interop
+            });
+
+            profilePictureIP.setOnClickListener(v -> {
+                if (currentUserID.equals(doc.getString("userID"))) {
                     Bundle args = new Bundle();
                     args.putString("queryType", "myItems");
                     args.putString("userId", currentUserID);
@@ -119,56 +93,30 @@ public class ItemProfileFragment extends Fragment {
                 }
                 else {
                     Bundle args = new Bundle();
-                    args.putString("name", userName);
-                    args.putString("userId", userId);
-                    args.putString("profileId", profileId);
+                    args.putString("name", doc.getString("userName"));
+                    args.putString("userId", doc.getString("userID"));
+                    args.putString("profileId", doc.getString("profileID"));
                     Fragment userProfile = new UserProfileFragment(); // userProfile fragment
                     userProfile.setArguments(args);
+                    Log.d("App", "setting bundle args " + args.toString());
                     getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)
                             .replace(R.id.fragment_container, userProfile).commit();
                 }
-            }
-        });
+            });
 
-        messageBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            messageBtn.setOnClickListener(v -> {
                 Bundle args = new Bundle();
-                boolean lesser = currentUserID.compareTo(userId) < 0; //need chatID that is same if currentUserID and userId are swapped. So always put "lesser" id first.
-                String chatID = lesser ? currentUserID + userId : userId + currentUserID; //this is how the chatID is defined; not safe since userId might not be defined yet
+                String userID = doc.getString("userID");
+                boolean lesser = currentUserID.compareTo(userID) < 0; //need chatID that is same if currentUserID and userId are swapped. So always put "lesser" id first.
+                String chatID = lesser ? currentUserID + userID : userID + currentUserID; //this is how the chatID is defined; not safe since userId might not be defined yet
                 args.putString("chatID", chatID);
-                args.putString("name", userName);
+                args.putString("name", doc.getString("userName"));
                 Fragment chatFragment = new ChatFragment();
                 chatFragment.setArguments(args);
                 getActivity().getSupportFragmentManager().beginTransaction().addToBackStack(null)
                         .replace(R.id.fragment_container, chatFragment).commit();
-
-                //Voiding below for now
-                /*
-                boolean isFBInstalled = isAppInstalled("com.facebook.orca");
-
-                if (!isFBInstalled) {
-                    Toast.makeText(getActivity(),
-                            "Facebook messenger isn't installed. Please download the app first.",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intent= new Intent();
-                    intent.setAction(Intent.ACTION_SEND);
-                    intent.putExtra(Intent.EXTRA_TEXT, "Hello, is this still available?");
-                    intent.setType("text/plain");
-                    intent.setPackage("com.facebook.orca");
-
-                    try {
-                        startActivity(intent);
-                    } catch (ActivityNotFoundException ex) {
-                        Toast.makeText(getActivity(),
-                                "Sorry! Can't open Facebook messenger right now. Please try again later.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }*/
-            }
+            });
         });
-
         return view;
     }
 
