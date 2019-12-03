@@ -2,7 +2,6 @@ package com.riceandbeansand.lentals
 
 import android.net.Uri
 import android.util.Log
-import com.facebook.FacebookSdk.getCacheDir
 import com.google.firebase.storage.FirebaseStorage
 import java.io.File
 import java.io.FileOutputStream
