@@ -13,6 +13,9 @@
         android:id="@+id/toMyItems"
         android:title="My Items" />
     <item
+        android:id="@+id/toFavorites"
+        android:title="Favorite Items" />
+    <item
         android:id="@+id/logOut"
         android:title="Log Out" />
 

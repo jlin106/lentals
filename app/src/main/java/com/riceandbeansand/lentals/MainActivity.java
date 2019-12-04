@@ -1,36 +1,32 @@
 package com.riceandbeansand.lentals;
 
 import com.facebook.login.LoginManager;
-import com.facebook.login.widget.ProfilePictureView;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.util.Base64;
@@ -38,34 +34,22 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
-import java.util.List;
-
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.widget.Toast;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.location.FusedLocationProviderClient;
-
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ListingsFragment.OnDataPass {
 
+    private static final String ACCESS_FINE_LOCATION = "Baltimore" ;
+    private static final String TAG = "Baltimore" ;
     private Fragment mainListingsFragment;
     private FirebaseAuth mAuth;
     private boolean loggedIn = false; //this should be set in the Firebase db, here temporarily
     private FragmentTransaction transaction;
     ListingsFragment.OnDataPass dataPasser;
-    String userName = "JOHN DOE"; //default user name
+    String name = "JOHN DOE"; //default user name
     String uid = "";
     String pgUserId = null;
-
-    private static final int REQUEST_CODE = 101;
 
     @Override
     public void onDataPass(String pgUserId) {
@@ -123,6 +107,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.main_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        /**
+        //get map stuff
+        String google_api_key = "AIzaSyBEfXjyqr8kFWjigV43vcCevu6EUQH6";
+        Places.initialize(getApplicationContext(), google_api_key);
+        PlacesClient placesClient = Places.createClient(this);
+        // Use fields to define the data types to return.
+        List<Place.Field> placeFields = Collections.singletonList(Place.Field.NAME);
+
+// Use the builder to create a FindCurrentPlaceRequest.
+        FindCurrentPlaceRequest request =
+                FindCurrentPlaceRequest.newInstance(placeFields);
+
+// Call findCurrentPlace and handle the response (first check that the user has granted permission).
+        if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
+
+            placeResponse.addOnCompleteListener(task --> {
+                if (task.isSuccessful()){
+                    FindCurrentPlaceResponse response = task.getResult();
+                    for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
+                        Log.i(TAG, String.format("Place '%s' has likelihood: %f",
+                                placeLikelihood.getPlace().getName(),
+                                placeLikelihood.getLikelihood()));
+                    }
+                } else {
+                    Exception exception = task.getException();
+                    if (exception instanceof ApiException) {
+                        ApiException apiException = (ApiException) exception;
+                        Log.e(TAG, "Place not found: " + apiException.getStatusCode());
+                        }
+                }
+            });
+        } else {
+            // A local method to request required permissions;
+            // See https://developer.android.com/training/permissions/requesting
+           // getLocationPermission();
+        }
+             **/
+       // SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+       //         .findFragmentById(R.id.toMaps);
+        // mapFragment.getMapAsync((OnMapReadyCallback) this);
+
+
 
     }
 
@@ -136,18 +163,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            // Get user name
-            userName = user.getDisplayName();
-            TextView nameLabel = (TextView) navHeader.findViewById(R.id.nameLabel);
-             nameLabel.setText(userName);
+            final TextView nameLabel = (TextView) navHeader.findViewById(R.id.nameLabel);
+            final ImageView profilePictureView = (ImageView) navHeader.findViewById(R.id.userProfilePic);
 
             for (UserInfo profile : user.getProviderData()) {
                 // Get UID specific to the provider
                 uid = profile.getUid();
             }
 
-            ProfilePictureView profilePictureView = (ProfilePictureView) navHeader.findViewById(R.id.userProfilePic);
-            profilePictureView.setProfileId(uid);
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference item = db.collection("users").document(user.getUid());
+            item.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            System.out.println("DOCUMENT EXISTS");
+                            String name = document.getString("name");
+                            String picture = document.getString("picture");
+
+                            nameLabel.setText(name);
+
+                            try {
+                                if (picture != null && !picture.isEmpty()) {
+                                    byte[] decodedString = Base64.decode(picture, Base64.DEFAULT);
+                                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                                    profilePictureView.setImageBitmap(decodedByte);
+                                }
+                            } catch (Exception e) {
+                                Log.d("TAG", "Couldn't set user profile picture");
+                            }
+                        }
+                    }
+                }
+            });
+
+
         }
     }
 
@@ -161,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             args.putString("queryType", "mainItems");
             mainListingsFragment = new ListingsFragment();
             mainListingsFragment.setArguments(args);
+            clearBackstack();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, mainListingsFragment).commit();
 
@@ -170,15 +223,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             args.putString("userId", mAuth.getCurrentUser().getUid());
             mainListingsFragment = new ListingsFragment();
             mainListingsFragment.setArguments(args);
+            clearBackstack();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, mainListingsFragment).commit();
-
+        } else if (id == R.id.toFavorites) {
+            Bundle args = new Bundle();
+            args.putString("queryType", "favoriteItems");
+            args.putString("userId", mAuth.getCurrentUser().getUid());
+            mainListingsFragment = new ListingsFragment();
+            mainListingsFragment.setArguments(args);
+            clearBackstack();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, mainListingsFragment).commit();
         } else if (id == R.id.toMaps) {
             MapFragment mapFragment = new MapFragment();
+            getSupportActionBar().setTitle("Map");
+            clearBackstack();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, mapFragment).commit();
         }
         else if (id == R.id.logOut) {
+            clearBackstack();
             logout();
         }
 
@@ -213,9 +278,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LoginManager.getInstance().logOut();
 
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-        finish();
     }
 
     @Override
@@ -261,5 +324,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //    public boolean onQueryTextChange(String newText) {
 //        return false;
 //    }
+
+    private void clearBackstack() {
+        try {
+            FragmentManager.BackStackEntry entry = getSupportFragmentManager().getBackStackEntryAt(
+                    0);
+            getSupportFragmentManager().popBackStack(entry.getId(),
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            getSupportFragmentManager().executePendingTransactions();
+        } catch (Exception e) {
+            getSupportFragmentManager().popBackStack(null,
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            getSupportFragmentManager().executePendingTransactions();
+        }
+
+    }
 
 }

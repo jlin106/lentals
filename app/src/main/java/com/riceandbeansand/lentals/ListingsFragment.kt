@@ -18,10 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import java.text.DecimalFormat
 import android.graphics.BitmapFactory
-import android.util.Base64
-import android.util.Log
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
+import java.util.*
 
 class ListingsFragment : Fragment() {
     private lateinit var dataPasser: OnDataPass
@@ -73,8 +71,13 @@ class ListingsFragment : Fragment() {
             (activity as AppCompatActivity).supportActionBar!!.title = "My Items"
             query = db.collection("items").orderBy("name").whereEqualTo("userID", userId)
         }
+        else if (queryString == "favoriteItems") {
+            passData(userId)
+            (activity as AppCompatActivity).supportActionBar!!.title = "Favorite Items"
+            query = db.collection("items").orderBy("name").whereEqualTo("visible", true).whereArrayContains("favoritedBy", actualUserId)
+        }
         else if (queryString == "searchItems") {
-            query = if (userId == null) db.collection("items").orderBy("name").startAt(searchQuery).endAt(searchQuery + "\uf8ff")
+            query = if (userId == null) db.collection("items").orderBy("name").whereEqualTo("visible", true).startAt(searchQuery).endAt(searchQuery + "\uf8ff")
             else db.collection("items").orderBy("name").whereEqualTo("visible", true).whereEqualTo("userID", userId).startAt(searchQuery).endAt(searchQuery + "\uf8ff")
         }
 
@@ -93,10 +96,11 @@ class ListingsFragment : Fragment() {
             }
 
             override fun onBindViewHolder(holder: ViewHolder, position: Int, model: ListingsItemSchema) {
-                if (model.image != null ){
-                    val decodedString = Base64.decode(model.image, Base64.DEFAULT)
-                    val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-                    holder.view.findViewById<ImageView>(R.id.imageView).setImageBitmap(decodedByte)
+                if (model.imagePath != null ) {
+                    val imageFile = getImageFileFromGSUrlWithCache(model.imagePath, activity!!.cacheDir){ File ->
+                        val decodedBytes = BitmapFactory.decodeFile(File.absolutePath)
+                        holder.view.findViewById<ImageView>(R.id.imageView).setImageBitmap(decodedBytes)
+                    }
                 }
                 if (model.userName != null) {
                     val username = "@" + model.userName.toLowerCase().replace(" ", "")
@@ -132,6 +136,31 @@ class ListingsFragment : Fragment() {
         }
 
         val view = inflater.inflate(R.layout.listing, container, false)
+
+        val emptyText = view.findViewById<View>(R.id.emptyListText) as TextView
+        query.get().addOnSuccessListener { documents ->
+            if (documents.isEmpty) {
+                emptyText.visibility=View.VISIBLE
+                var message = ""
+                if (queryString == "mainItems") {
+                    message = "There are currently no items on the marketplace!"
+                }
+                else if (queryString == "userItems") {
+                    message = "This user currently has no listed items!"
+                }
+                else if (queryString == "myItems") {
+                    message = "You currently have no listed items!"
+                }
+                else if (queryString == "favoriteItems") {
+                    message = "You currently have no favorited items!"
+                }
+                else if (queryString == "searchItems") {
+                    message = "Sorry, there are no items in the marketplace that match your search!"
+                }
+                emptyText.setText(message)
+            }
+        }
+
         val recyclerView = view.findViewById<View>(R.id.item_list) as RecyclerView
         recyclerView.layoutManager = GridLayoutManager(context, 2)
         recyclerView.adapter = adapter
@@ -142,7 +171,7 @@ class ListingsFragment : Fragment() {
                     .replace(R.id.fragment_container, AddItemFragment()).commit()
         })
 
-        if (queryString == "userItems" && !isCurrentUser) {
+        if ((queryString == "userItems" && !isCurrentUser) || queryString == "favoriteItems") {
             fab.visibility=View.INVISIBLE
         }
 
