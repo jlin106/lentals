@@ -14,7 +14,7 @@
         android:title="My Items" />
     <item
         android:id="@+id/toFavorites"
-        android:title="Favorited Items" />
+        android:title="Favorite Items" />
     <item
         android:id="@+id/logOut"
         android:title="Log Out" />

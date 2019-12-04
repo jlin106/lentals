@@ -136,6 +136,31 @@ class ListingsFragment : Fragment() {
         }
 
         val view = inflater.inflate(R.layout.listing, container, false)
+
+        val emptyText = view.findViewById<View>(R.id.emptyListText) as TextView
+        query.get().addOnSuccessListener { documents ->
+            if (documents.isEmpty) {
+                emptyText.visibility=View.VISIBLE
+                var message = ""
+                if (queryString == "mainItems") {
+                    message = "There are currently no items on the marketplace!"
+                }
+                else if (queryString == "userItems") {
+                    message = "This user currently has no listed items!"
+                }
+                else if (queryString == "myItems") {
+                    message = "You currently have no listed items!"
+                }
+                else if (queryString == "favoriteItems") {
+                    message = "You currently have no favorited items!"
+                }
+                else if (queryString == "searchItems") {
+                    message = "Sorry, there are no items in the marketplace that match your search!"
+                }
+                emptyText.setText(message)
+            }
+        }
+
         val recyclerView = view.findViewById<View>(R.id.item_list) as RecyclerView
         recyclerView.layoutManager = GridLayoutManager(context, 2)
         recyclerView.adapter = adapter
