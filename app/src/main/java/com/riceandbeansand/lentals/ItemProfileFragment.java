@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,7 +19,9 @@ import androidx.fragment.app.Fragment;
 import kotlin.Unit;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.File;
@@ -53,9 +56,12 @@ public class ItemProfileFragment extends Fragment {
         view.findViewById(R.id.profilePictureContainer).setClipToOutline(true);
         final Button messageBtn = (Button) view.findViewById(R.id.message_btn);
         final ImageView profilePictureIP = (ImageView) view.findViewById(R.id.userProfilePic_ip);
+        final ImageButton favoriteBtn = (ImageButton) view.findViewById(R.id.favBtn);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("items").document(itemID).get().addOnSuccessListener((DocumentSnapshot doc) -> {
+        DocumentReference item = db.collection("items").document(itemID);
+
+        item.get().addOnSuccessListener((DocumentSnapshot doc) -> {
             if (currentUserID.equals(doc.getString("userID"))) {
                 messageBtn.setVisibility(View.GONE);
             }
@@ -80,6 +86,10 @@ public class ItemProfileFragment extends Fragment {
                 Bitmap decodedBytes = BitmapFactory.decodeFile(file.getAbsolutePath());
                 imageIP.setImageBitmap(decodedBytes);
                 return Unit.INSTANCE; //required by Java for kotlin interop
+            });
+
+            favoriteBtn.setOnClickListener(v -> {
+                item.update("favoritedBy", FieldValue.arrayUnion(currentUserID));
             });
 
             profilePictureIP.setOnClickListener(v -> {

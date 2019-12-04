@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import java.text.DecimalFormat
 import android.graphics.BitmapFactory
 import android.widget.ImageView
+import java.util.*
 
 class ListingsFragment : Fragment() {
     private lateinit var dataPasser: OnDataPass
@@ -70,8 +71,13 @@ class ListingsFragment : Fragment() {
             (activity as AppCompatActivity).supportActionBar!!.title = "My Items"
             query = db.collection("items").orderBy("name").whereEqualTo("userID", userId)
         }
+        else if (queryString == "favoriteItems") {
+            passData(userId)
+            (activity as AppCompatActivity).supportActionBar!!.title = "Favorite Items"
+            query = db.collection("items").orderBy("name").whereEqualTo("visible", true).whereArrayContains("favoritedBy", actualUserId)
+        }
         else if (queryString == "searchItems") {
-            query = if (userId == null) db.collection("items").orderBy("name").startAt(searchQuery).endAt(searchQuery + "\uf8ff")
+            query = if (userId == null) db.collection("items").orderBy("name").whereEqualTo("visible", true).startAt(searchQuery).endAt(searchQuery + "\uf8ff")
             else db.collection("items").orderBy("name").whereEqualTo("visible", true).whereEqualTo("userID", userId).startAt(searchQuery).endAt(searchQuery + "\uf8ff")
         }
 
@@ -140,7 +146,7 @@ class ListingsFragment : Fragment() {
                     .replace(R.id.fragment_container, AddItemFragment()).commit()
         })
 
-        if (queryString == "userItems" && !isCurrentUser) {
+        if ((queryString == "userItems" && !isCurrentUser) || queryString == "favoriteItems") {
             fab.visibility=View.INVISIBLE
         }
 

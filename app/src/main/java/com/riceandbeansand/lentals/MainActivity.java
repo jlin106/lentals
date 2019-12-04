@@ -226,6 +226,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             clearBackstack();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, mainListingsFragment).commit();
+        } else if (id == R.id.toFavorites) {
+            Bundle args = new Bundle();
+            args.putString("queryType", "favoriteItems");
+            args.putString("userId", mAuth.getCurrentUser().getUid());
+            mainListingsFragment = new ListingsFragment();
+            mainListingsFragment.setArguments(args);
+            clearBackstack();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, mainListingsFragment).commit();
         } else if (id == R.id.toMaps) {
             SupportMapFragment mFragment = SupportMapFragment.newInstance();
             getSupportActionBar().setTitle("Map");
