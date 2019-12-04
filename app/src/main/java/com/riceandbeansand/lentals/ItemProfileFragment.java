@@ -85,21 +85,14 @@ public class ItemProfileFragment extends Fragment {
             descripIP.setText(doc.getString("descrip"));
             userNameIP.setText(doc.getString("userName"));
             messageBtn.setText("Message");
+
             // if favorited, use full star icon
             if (isFavorited) {
                 favoriteBtn.setImageResource(R.drawable.fullstar);
-                favoriteBtn.setOnClickListener(v -> {
-                    item.update("favoritedBy", FieldValue.arrayRemove(currentUserID));
-                    // switch icons
-                    favoriteBtn.setImageResource(R.drawable.emptystar);
-                });
+                favoriteBtn.setTag(R.drawable.fullstar);
             } else {
                 favoriteBtn.setImageResource(R.drawable.emptystar);
-                favoriteBtn.setOnClickListener(v -> {
-                    item.update("favoritedBy", FieldValue.arrayUnion(currentUserID));
-                    // switch icons
-                    favoriteBtn.setImageResource(R.drawable.fullstar);
-                });
+                favoriteBtn.setTag(R.drawable.emptystar);
             }
 
             db.collection("users").document(doc.getString("userID")).get().addOnSuccessListener(userDoc -> {
@@ -116,6 +109,20 @@ public class ItemProfileFragment extends Fragment {
                 Bitmap decodedBytes = BitmapFactory.decodeFile(file.getAbsolutePath());
                 imageIP.setImageBitmap(decodedBytes);
                 return Unit.INSTANCE; //required by Java for kotlin interop
+            });
+
+            favoriteBtn.setOnClickListener(v -> {
+                Integer resource = (Integer) favoriteBtn.getTag();
+
+                if(resource == R.drawable.fullstar){
+                    item.update("favoritedBy", FieldValue.arrayRemove(currentUserID));
+                    favoriteBtn.setImageResource(R.drawable.emptystar);
+                    favoriteBtn.setTag(R.drawable.emptystar);
+                }else {
+                    item.update("favoritedBy", FieldValue.arrayUnion(currentUserID));
+                    favoriteBtn.setImageResource(R.drawable.fullstar);
+                    favoriteBtn.setTag(R.drawable.fullstar);
+                }
             });
 
             profilePictureIP.setOnClickListener(v -> {
