@@ -2,7 +2,6 @@ package com.riceandbeansand.lentals;
 
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -47,12 +46,16 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.android.libraries.places.api.Places;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.widget.Toast;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.location.FusedLocationProviderClient;
+
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ListingsFragment.OnDataPass {
 
-    private static final String ACCESS_FINE_LOCATION = "Baltimore" ;
-    private static final String TAG = "Baltimore" ;
     private Fragment mainListingsFragment;
     private FirebaseAuth mAuth;
     private boolean loggedIn = false; //this should be set in the Firebase db, here temporarily
@@ -61,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String userName = "JOHN DOE"; //default user name
     String uid = "";
     String pgUserId = null;
+
+    private static final int REQUEST_CODE = 101;
 
     @Override
     public void onDataPass(String pgUserId) {
@@ -117,48 +122,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.main_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        /**
-        //get map stuff
-        String google_api_key = "AIzaSyBEfXjyqr8kFWjigV43vcCevu6EUQH6";
-        Places.initialize(getApplicationContext(), google_api_key);
-        PlacesClient placesClient = Places.createClient(this);
-        // Use fields to define the data types to return.
-        List<Place.Field> placeFields = Collections.singletonList(Place.Field.NAME);
-
-// Use the builder to create a FindCurrentPlaceRequest.
-        FindCurrentPlaceRequest request =
-                FindCurrentPlaceRequest.newInstance(placeFields);
-
-// Call findCurrentPlace and handle the response (first check that the user has granted permission).
-        if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
-
-            placeResponse.addOnCompleteListener(task --> {
-                if (task.isSuccessful()){
-                    FindCurrentPlaceResponse response = task.getResult();
-                    for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                        Log.i(TAG, String.format("Place '%s' has likelihood: %f",
-                                placeLikelihood.getPlace().getName(),
-                                placeLikelihood.getLikelihood()));
-                    }
-                } else {
-                    Exception exception = task.getException();
-                    if (exception instanceof ApiException) {
-                        ApiException apiException = (ApiException) exception;
-                        Log.e(TAG, "Place not found: " + apiException.getStatusCode());
-                        }
-                }
-            });
-        } else {
-            // A local method to request required permissions;
-            // See https://developer.android.com/training/permissions/requesting
-           // getLocationPermission();
-        }
-             **/
-       // SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-       //         .findFragmentById(R.id.toMaps);
-        // mapFragment.getMapAsync((OnMapReadyCallback) this);
-
 
 
     }
@@ -209,12 +172,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mainListingsFragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, mainListingsFragment).commit();
+
         } else if (id == R.id.toMaps) {
-            SupportMapFragment mFragment = SupportMapFragment.newInstance();
-            getSupportActionBar().setTitle("Map");
+            MapFragment mapFragment = new MapFragment();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, mFragment).commit();
-            //mFragment.getMapAsync((OnMapReadyCallback) this);
+                    .replace(R.id.fragment_container, mapFragment).commit();
         }
         else if (id == R.id.logOut) {
             logout();
