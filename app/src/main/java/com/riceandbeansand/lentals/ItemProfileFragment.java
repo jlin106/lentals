@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.List;
 
 public class ItemProfileFragment extends Fragment {
 
@@ -64,6 +65,19 @@ public class ItemProfileFragment extends Fragment {
         item.get().addOnSuccessListener((DocumentSnapshot doc) -> {
             if (currentUserID.equals(doc.getString("userID"))) {
                 messageBtn.setVisibility(View.GONE);
+                favoriteBtn.setVisibility(View.GONE);
+            }
+
+            boolean isFavorited = false;
+
+            // check list of favorited items
+            List<String> favoritedItems = (List<String>) doc.get("favoritedBy");
+            if (favoritedItems != null) {
+                for(String s: favoritedItems) {
+                    if (s.equals(currentUserID)) {
+                        isFavorited = true;
+                    }
+                }
             }
 
             nameIP.setText(doc.getString("name"));
@@ -71,6 +85,22 @@ public class ItemProfileFragment extends Fragment {
             descripIP.setText(doc.getString("descrip"));
             userNameIP.setText(doc.getString("userName"));
             messageBtn.setText("Message");
+            // if favorited, use full star icon
+            if (isFavorited) {
+                favoriteBtn.setImageResource(R.drawable.fullstar);
+                favoriteBtn.setOnClickListener(v -> {
+                    item.update("favoritedBy", FieldValue.arrayRemove(currentUserID));
+                    // switch icons
+                    favoriteBtn.setImageResource(R.drawable.emptystar);
+                });
+            } else {
+                favoriteBtn.setImageResource(R.drawable.emptystar);
+                favoriteBtn.setOnClickListener(v -> {
+                    item.update("favoritedBy", FieldValue.arrayUnion(currentUserID));
+                    // switch icons
+                    favoriteBtn.setImageResource(R.drawable.fullstar);
+                });
+            }
 
             db.collection("users").document(doc.getString("userID")).get().addOnSuccessListener(userDoc -> {
                 String profileString = userDoc.getString("picture");
@@ -86,10 +116,6 @@ public class ItemProfileFragment extends Fragment {
                 Bitmap decodedBytes = BitmapFactory.decodeFile(file.getAbsolutePath());
                 imageIP.setImageBitmap(decodedBytes);
                 return Unit.INSTANCE; //required by Java for kotlin interop
-            });
-
-            favoriteBtn.setOnClickListener(v -> {
-                item.update("favoritedBy", FieldValue.arrayUnion(currentUserID));
             });
 
             profilePictureIP.setOnClickListener(v -> {
