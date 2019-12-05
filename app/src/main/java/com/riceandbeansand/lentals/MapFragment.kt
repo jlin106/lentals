@@ -79,7 +79,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         GlobalScope.launch(Dispatchers.Main) {
             val currentLocation = fetchLocation()!!
             val latLng = LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())
-            val markerOptions = MarkerOptions().position(latLng).title("I am here!")
+            val markerOptions = MarkerOptions().position(latLng).title("Cameron is dumb lol")
             googleMap!!.animateCamera(CameraUpdateFactory.newLatLng(latLng))
             googleMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5f))
             googleMap!!.addMarker(markerOptions)
