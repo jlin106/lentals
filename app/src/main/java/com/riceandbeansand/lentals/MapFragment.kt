@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,10 +27,12 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
     private val REQUEST_CODE = 101
+    private var googleMap: GoogleMap? = null;
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -55,11 +58,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         //can also Task.await(task) instead of success listeners and async
         return suspendCoroutine { cont ->
             val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context!!)
-            if (ActivityCompat.checkSelfPermission(
-                            activity!!.applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                            activity!!.applicationContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity as AppCompatActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE)
-            }
             val task = fusedLocationProviderClient.getLastLocation()
             task.addOnSuccessListener { cont.resume(it) }
             task.addOnFailureListener {cont.resumeWithException(it)}
@@ -67,13 +65,24 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
+        this.googleMap = googleMap
+        if (ActivityCompat.checkSelfPermission(
+                        activity!!.applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                        activity!!.applicationContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE)
+        } else {
+            initializeMap()
+        }
+    }
+
+    fun initializeMap() {
         GlobalScope.launch(Dispatchers.Main) {
             val currentLocation = fetchLocation()!!
             val latLng = LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())
             val markerOptions = MarkerOptions().position(latLng).title("I am here!")
-            googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5f))
-            googleMap.addMarker(markerOptions)
+            googleMap!!.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+            googleMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5f))
+            googleMap!!.addMarker(markerOptions)
         }
     }
 
@@ -81,10 +90,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         when (requestCode) {
             REQUEST_CODE -> {
                 if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //permission not granted
+                    initializeMap()
                 }
                 else {
-                    //permission granted
+                    //not granted
                 }
             }
         }
