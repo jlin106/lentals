@@ -1,167 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageHolder"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/chooseImageBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_foreground" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/chooseImageBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:fontFamily="@font/montserrat"
-        android:text="Choose Images"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@id/visibilitySwitch"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageHolder" />
 
-    <Switch
-        android:id="@+id/visibilitySwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:checked="true"
-        android:fontFamily="@font/montserrat"
-        android:text="VISIBILITY  "
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/itemNameText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chooseImageBtn" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionText"
+            tools:layout_editor_absoluteX="0dp">
 
-    <TextView
-        android:id="@+id/itemNameLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/montserrat"
-        android:text="Item Name:"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/rateText"
-        app:layout_constraintEnd_toStartOf="@+id/itemNameText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/visibilitySwitch" />
+            <Button
+                android:id="@+id/noPostBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/grey"
+                android:fontFamily="@font/montserrat"
+                android:paddingStart="10sp"
+                android:paddingEnd="10sp"
+                android:text="CANCEL"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/deleteItemBtn"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/itemNameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:ems="10"
-        android:fontFamily="@font/montserrat"
-        android:hint="enter item name"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/rateText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/itemNameLabel"
-        app:layout_constraintTop_toBottomOf="@id/visibilitySwitch" />
+            <Button
+                android:id="@+id/postBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:fontFamily="@font/montserrat"
+                android:paddingStart="10sp"
+                android:paddingEnd="10sp"
+                android:text="POST"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/deleteItemBtn" />
 
-    <TextView
-        android:id="@+id/rateLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/montserrat"
-        android:text="Daily Rate:"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/descriptionText"
-        app:layout_constraintEnd_toStartOf="@+id/rateText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemNameText" />
+            <Button
+                android:id="@+id/deleteItemBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/red"
+                android:fontFamily="@font/montserrat"
+                android:paddingStart="10sp"
+                android:paddingEnd="10sp"
+                android:text="DELETE"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/postBtn"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/noPostBtn" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <EditText
-        android:id="@+id/rateText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        android:fontFamily="@font/montserrat"
-        android:hint="enter daily rate"
-        app:layout_constraintBottom_toTopOf="@+id/descriptionText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/rateLabel"
-        app:layout_constraintTop_toBottomOf="@+id/itemNameText" />
+        <EditText
+            android:id="@+id/itemNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:ems="10"
+            android:fontFamily="@font/montserrat"
+            android:hint="enter item name"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toTopOf="@+id/rateText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/itemNameLabel"
+            app:layout_constraintTop_toBottomOf="@id/visibilitySwitch" />
 
-    <TextView
-        android:id="@+id/descriptionLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/montserrat"
-        android:textSize="18sp"
-        android:text="Description:"
-        app:layout_constraintBottom_toTopOf="@+id/noPostBtn"
-        app:layout_constraintEnd_toStartOf="@+id/descriptionText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rateText" />
+        <EditText
+            android:id="@+id/rateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:ems="10"
+            android:fontFamily="@font/montserrat"
+            android:hint="enter daily rate"
+            android:inputType="numberDecimal"
+            app:layout_constraintBottom_toTopOf="@+id/descriptionText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/rateLabel"
+            app:layout_constraintTop_toBottomOf="@+id/itemNameText" />
 
-    <EditText
-        android:id="@+id/descriptionText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:ems="10"
-        android:inputType="textMultiLine"
-        android:fontFamily="@font/montserrat"
-        android:hint="add a description of your item"
-        app:layout_constraintBottom_toTopOf="@+id/noPostBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/descriptionLabel"
-        app:layout_constraintTop_toBottomOf="@+id/rateText" />
+        <EditText
+            android:id="@+id/descriptionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:ems="10"
+            android:fontFamily="@font/montserrat"
+            android:hint="add a description of your item"
+            android:inputType="textMultiLine"
+            app:layout_constraintBottom_toTopOf="@+id/noPostBtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/descriptionLabel"
+            app:layout_constraintTop_toBottomOf="@+id/rateText" />
 
-    <Button
-        android:id="@+id/noPostBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:background="@color/grey"
-        android:fontFamily="@font/montserrat"
-        android:text="CANCEL"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/deleteItemBtn"
-        app:layout_constraintEnd_toStartOf="@+id/postBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
+        <Switch
+            android:id="@+id/visibilitySwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
+            android:checked="true"
+            android:fontFamily="@font/montserrat"
+            android:text="VISIBILITY  "
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/itemNameText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />
 
-    <Button
-        android:id="@+id/postBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:background="@color/colorPrimary"
-        android:fontFamily="@font/montserrat"
-        android:text="POST"
-        android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/noPostBtn"
-        app:layout_constraintBottom_toTopOf="@+id/deleteItemBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/noPostBtn"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
+        <TextView
+            android:id="@+id/itemNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat"
+            android:text="Item Name:"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/rateText"
+            app:layout_constraintEnd_toStartOf="@+id/itemNameText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/visibilitySwitch" />
 
-    <Button
-        android:id="@+id/deleteItemBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/red"
-        android:fontFamily="@font/montserrat"
-        android:text="DELETE ITEM"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/postBtn"
-        android:visibility="gone" />
+        <TextView
+            android:id="@+id/rateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat"
+            android:text="Daily Rate:"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/descriptionText"
+            app:layout_constraintEnd_toStartOf="@+id/rateText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/itemNameText" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/descriptionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat"
+            android:text="Description:"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/noPostBtn"
+            app:layout_constraintEnd_toStartOf="@+id/descriptionText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rateText" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout5"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/rounded_rectangle"
+            android:padding="20sp"
+            app:layout_constraintDimensionRatio="1.0"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/chooseImageBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@color/colorPrimary"
+                android:fontFamily="@font/montserrat"
+                android:paddingStart="10sp"
+                android:paddingEnd="10sp"
+                android:text="Choose Images"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageHolder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.95"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0"
+                app:srcCompat="@drawable/ic_launcher_foreground" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

@@ -70,7 +70,7 @@ public class AddItemFragment extends Fragment {
 
         if (!isNewItem) {
             deleteItem.setVisibility(View.VISIBLE);
-            postItem.setText("Update!");
+            postItem.setText("Update");
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Update Item");
             DocumentReference item = db.collection("items").document(itemID);
             item.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -109,6 +109,15 @@ public class AddItemFragment extends Fragment {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
             FirebaseUser user = mAuth.getCurrentUser();
 
+            Log.d("app", "name is: " + itemNameView.getText().toString());
+
+            if (itemNameView.getText().toString().equals("") || rateView.getText().toString().equals("")) {
+                Toast.makeText(getActivity(),
+                        "Please set a name and a rate!",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             Map<String, Object> docData = new HashMap<>();
             docData.put("name", itemNameView.getText().toString());
             docData.put("visible", visibleSwitch.isChecked());
@@ -122,8 +131,16 @@ public class AddItemFragment extends Fragment {
                 docData.put("profileID", profile.getUid());
             }
             String postedItemID = itemID.equals("") ? db.collection("items").document().getId() : itemID;
+            boolean newImagePicked = imageView.getTag() != null; //check if new image has been picked
 
-            if (isNewItem) {
+            if (isNewItem && !newImagePicked) {
+                Toast.makeText(getActivity(),
+                        "Please pick an image!",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (isNewItem || (!isNewItem && newImagePicked)) {
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 String imageKey = "mainImage" + postedItemID;
                 StorageReference imageRef = storage.getReference().child("images").child(imageKey);
@@ -144,10 +161,6 @@ public class AddItemFragment extends Fragment {
                 } catch (Exception e) {
                     Log.d("App", "failed to open image file", e);
                 }
-            }
-            //Should validate stuff server side
-            if (docData.get("name") == "") {
-                return;
             }
 
             db.collection("items").document(postedItemID).set(docData, SetOptions.merge())
