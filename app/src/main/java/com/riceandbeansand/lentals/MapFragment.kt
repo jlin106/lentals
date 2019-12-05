@@ -1,6 +1,7 @@
 package com.riceandbeansand.lentals
 
 import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -21,6 +23,11 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlin.coroutines.resume
@@ -32,7 +39,12 @@ import kotlinx.coroutines.runBlocking
 class MapFragment : Fragment(), OnMapReadyCallback {
 
     private val REQUEST_CODE = 101
-    private var googleMap: GoogleMap? = null;
+    private var googleMap: GoogleMap? = null
+    private val dbsize = 0
+
+    //should i change double to LatLng
+    var coll_items: HashMap<String, LatLng> = hashMapOf();
+    //each item in array list is a mapping of an item name to an array containing the LAT_LONG coords
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -79,10 +91,37 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         GlobalScope.launch(Dispatchers.Main) {
             val currentLocation = fetchLocation()!!
             val latLng = LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())
-            val markerOptions = MarkerOptions().position(latLng).title("Cameron is dumb lol")
-            googleMap!!.animateCamera(CameraUpdateFactory.newLatLng(latLng))
-            googleMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5f))
-            googleMap!!.addMarker(markerOptions)
+            val db = FirebaseFirestore.getInstance()
+
+            db.collection("items")
+                    .get()
+                    .addOnSuccessListener { result ->
+                        var stringyboi = 0
+                        for (document in result) {
+                            Log.d(TAG, "${document.id} => ${document.data}")
+                            stringyboi += 1
+                            //definitely did this wrong
+                            val latlong = document.get("lat_long") as List<Double>
+                            val latlongObj = LatLng(latlong[0], latlong[1])
+                            coll_items.put(document.getString("name").toString(), latlongObj)
+                        }
+                        for (item in coll_items) {
+                            //did i call this correctly
+                            val markerOptions = MarkerOptions().position(item.value).title(item.key)
+                            googleMap!!.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+                            googleMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5f))
+                            googleMap!!.addMarker(markerOptions)
+                        }
+                        val markerOptions = MarkerOptions().position(latLng).title( "Available things to borrow: " + stringyboi)
+                        googleMap!!.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+                        googleMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5f))
+                        googleMap!!.addMarker(markerOptions)
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.d(TAG, "Error getting documents: ", exception)
+                    }
+
+
         }
     }
 
