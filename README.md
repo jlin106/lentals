@@ -20,7 +20,7 @@ Currently, users are able to log in using their Facebook account. Once the user 
 
 ## Sprint 2
 **Features:**
-- Chat/Messages - decided against Facebook messenger
+- Chat/Messages - decided against Facebook messenger (would need additional permissions and such)
 - Updated Main Listings Screen with basic search
     - Query Firestore Firebase database entries, save history locally
 - Item Profile Screen - use unique document ID to get data from the Firebase database on the specific item and populate the screen
@@ -37,6 +37,5 @@ Currently, users are able to log in using their Facebook account. Once the user 
 - Backend: Optimized picture uploading/storing and backstack
 
 **Summary:**
-
 
 **Testing:** @Simon, Log in with your own Facebook account and test out the app!
