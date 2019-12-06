@@ -13,6 +13,7 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttonConstraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
@@ -106,7 +107,7 @@
             android:fontFamily="@font/montserrat"
             android:hint="add a description of your item"
             android:inputType="textMultiLine"
-            app:layout_constraintBottom_toTopOf="@+id/noPostBtn"
+            app:layout_constraintBottom_toTopOf="@+id/buttonConstraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/descriptionLabel"
             app:layout_constraintTop_toBottomOf="@+id/rateText" />
@@ -158,7 +159,7 @@
             android:fontFamily="@font/montserrat"
             android:text="Description:"
             android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/noPostBtn"
+            app:layout_constraintBottom_toTopOf="@+id/buttonConstraintLayout"
             app:layout_constraintEnd_toStartOf="@+id/descriptionText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rateText" />
