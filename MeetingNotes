@@ -36,3 +36,55 @@ Updates:
 
 Monday 11/11/19 - Full Team
 WORK ON PRESENTATION, DEMO, README and submit assignment
+
+Thursday 11/14/19 - Full Team w/ Simon
+Updates:
+Main objectives for Sprint 2
+- Chat - using Facebook Messenger API --> Manan And Cameron
+- Application wide search functionality w/ history --> Manan
+- Setup user db --> Reem
+- Main screens to work on: 
+  (1) Item Profile --> Jen
+  (2) User Profile --> Manan
+  (3) Favorited Items --> Jen
+  (4) Map Screen --> Cameron
+- Dependencies: Item Profile --> User Profile --> Favorited Items
+
+Monday 11/18/19 - Full Team
+Updates:
+Jen - started working on item profile screen
+Manan - will work on user profile screen
+Cameron - will work on map screen
+Reem - will work on user db
+
+Thursday 11/21/19 - Full Team
+Updates:
+- Jen - finished item profile screen
+- Created a timeline for the list of tasks to be completed over Thanksgiving break
+
+-------------------------------------
+         THANKSGIVING BREAK
+Saturday 11/23/19 - Saturday 12/01/19
+-------------------------------------
+Wednesday 11/27/19 - Full Team (messaging)
+Updates:
+- Cameron - created chat
+- Manan - finished chat & user profile screen
+
+Sunday 12/01/19 - Full Team (messaging)
+Updates:
+- Jen - added visibility for items and made UI fixes
+- Manan - finished search functionality w/ history
+-------------------------------------
+
+Monday 12/02/19 - Full Team
+Updates:
+- Cameron & Reem - made significant progress on map screen, will continue to work on it
+- Manan - created user database
+- Cameron & Manan - optimized backstack and storage
+- WORK ON PRESENTATION & DEMO
+
+Wednesday 12/04/19 - Full Team
+Updates:
+- Jen - finished favorite items screen
+- Reem - finished map screen
