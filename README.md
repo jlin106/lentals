@@ -8,6 +8,8 @@ Developers: Jennifer Lin, Manan Aggarwal, Cameron Franz, Reem Larabi
 
 Video Demo: https://youtu.be/4T5ZSdFHQSw 
 
+<img src="wireframe.png" width="500" height="600" />
+
 ## Sprint 1
 **Features:**
 - Facebook integration (Facebook log-in and populating navigation drawer header with user info)
