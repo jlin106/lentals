@@ -6,6 +6,8 @@ Lentals provides a hassle-free, cheap, and convenient alternative wherein a user
 
 Developers: Jennifer Lin, Manan Aggarwal, Cameron Franz, Reem Larabi
 
+Video Demo: https://youtu.be/4T5ZSdFHQSw 
+
 ## Sprint 1
 **Features:**
 - Facebook integration (Facebook log-in and populating navigation drawer header with user info)
